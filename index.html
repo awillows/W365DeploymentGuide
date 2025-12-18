@@ -21,7 +21,6 @@
                 <nav class="nav">
                     <a href="#overview">Overview</a>
                     <a href="#wizard">Wizard</a>
-                    <a href="#checklist">Checklist</a>
                     <a href="#resources">Resources</a>
                 </nav>
             </div>
@@ -743,82 +742,6 @@ graph LR
                     <button class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
                         Next <i class="fas fa-arrow-right"></i>
                     </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Checklist Section -->
-    <section id="checklist" class="section">
-        <div class="container">
-            <h2>Quick Reference Checklist</h2>
-            <p class="section-subtitle">Essential steps for any Windows 365 deployment</p>
-
-            <div class="checklist-grid">
-                <div class="checklist-card">
-                    <h4><span class="step-number">1</span> Prerequisites</h4>
-                    <ul class="checklist-items">
-                        <li><input type="checkbox"> Verify licensing (E3/E5/EMS + W365)</li>
-                        <li><input type="checkbox"> Azure subscription (if using ANC)</li>
-                        <li><input type="checkbox"> Intune configured</li>
-                        <li><input type="checkbox"> Users synced to Entra ID</li>
-                        <li><input type="checkbox"> Network requirements reviewed</li>
-                    </ul>
-                </div>
-
-                <div class="checklist-card">
-                    <h4><span class="step-number">2</span> Network Setup</h4>
-                    <ul class="checklist-items">
-                        <li><input type="checkbox"> Choose MHN or ANC</li>
-                        <li><input type="checkbox"> Create Azure VNet (if ANC)</li>
-                        <li><input type="checkbox"> Configure DNS</li>
-                        <li><input type="checkbox"> Set up VPN/ExpressRoute (if needed)</li>
-                        <li><input type="checkbox"> Create Azure Network Connection</li>
-                    </ul>
-                </div>
-
-                <div class="checklist-card">
-                    <h4><span class="step-number">3</span> Identity Config</h4>
-                    <ul class="checklist-items">
-                        <li><input type="checkbox"> Configure join type</li>
-                        <li><input type="checkbox"> Set up Entra ID Connect (if Hybrid)</li>
-                        <li><input type="checkbox"> Enable device writeback (if Hybrid)</li>
-                        <li><input type="checkbox"> Configure SSO settings</li>
-                        <li><input type="checkbox"> Test user sign-in</li>
-                    </ul>
-                </div>
-
-                <div class="checklist-card">
-                    <h4><span class="step-number">4</span> Provisioning</h4>
-                    <ul class="checklist-items">
-                        <li><input type="checkbox"> Create provisioning policy</li>
-                        <li><input type="checkbox"> Select image (Gallery/Custom)</li>
-                        <li><input type="checkbox"> Configure Cloud PC size</li>
-                        <li><input type="checkbox"> Assign to user group</li>
-                        <li><input type="checkbox"> Test provisioning</li>
-                    </ul>
-                </div>
-
-                <div class="checklist-card">
-                    <h4><span class="step-number">5</span> Security</h4>
-                    <ul class="checklist-items">
-                        <li><input type="checkbox"> Configure Conditional Access</li>
-                        <li><input type="checkbox"> Enable MFA</li>
-                        <li><input type="checkbox"> Deploy security baselines</li>
-                        <li><input type="checkbox"> Configure Defender for Endpoint</li>
-                        <li><input type="checkbox"> Set RDP redirection policies</li>
-                    </ul>
-                </div>
-
-                <div class="checklist-card">
-                    <h4><span class="step-number">6</span> User Experience</h4>
-                    <ul class="checklist-items">
-                        <li><input type="checkbox"> Deploy Windows App</li>
-                        <li><input type="checkbox"> Configure user settings</li>
-                        <li><input type="checkbox"> Set up app deployment</li>
-                        <li><input type="checkbox"> Create user documentation</li>
-                        <li><input type="checkbox"> Plan user training</li>
-                    </ul>
                 </div>
             </div>
         </div>
