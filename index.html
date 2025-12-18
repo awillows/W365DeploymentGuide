@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 365 Deployment Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-microsoft"></i>
+                    <span>Windows 365 Deployment Guide</span>
+                </div>
+                <nav class="nav">
+                    <a href="#overview">Overview</a>
+                    <a href="#wizard">Wizard</a>
+                    <a href="#checklist">Checklist</a>
+                    <a href="#resources">Resources</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Windows 365 Deployment Guide</h1>
+            <p>Interactive wizard to help you plan and deploy Cloud PCs in your organization</p>
+            <div class="hero-buttons">
+                <a href="#wizard" class="btn btn-primary">Start Planning Wizard</a>
+                <a href="#overview" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="section">
+        <div class="container">
+            <h2>Deployment Overview</h2>
+            <p class="section-subtitle">Key decisions for your Windows 365 deployment</p>
+            
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="card-icon"><i class="fas fa-id-card"></i></div>
+                    <h3>Identity</h3>
+                    <p>Choose between Microsoft Entra ID join or Hybrid Entra ID join based on your existing infrastructure</p>
+                </div>
+                <div class="overview-card">
+                    <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+                    <h3>Networking</h3>
+                    <p>Microsoft Hosted Network for simplicity or Azure Network Connection for on-premises access</p>
+                </div>
+                <div class="overview-card">
+                    <div class="card-icon"><i class="fas fa-desktop"></i></div>
+                    <h3>Images</h3>
+                    <p>Gallery images for quick deployment or custom images for standardized configurations</p>
+                </div>
+                <div class="overview-card">
+                    <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Security</h3>
+                    <p>Conditional Access, MFA, and endpoint security policies for your Cloud PCs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wizard Section -->
+    <section id="wizard" class="section section-alt">
+        <div class="container">
+            <h2>Deployment Planning Wizard</h2>
+            <p class="section-subtitle">Answer a few questions to get personalized recommendations</p>
+
+            <!-- Progress Bar -->
+            <div class="wizard-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-steps">
+                    <span class="step active" data-step="1">License</span>
+                    <span class="step" data-step="2">Identity</span>
+                    <span class="step" data-step="3">Network</span>
+                    <span class="step" data-step="4">Image</span>
+                    <span class="step" data-step="5">Security</span>
+                    <span class="step" data-step="6">Summary</span>
+                </div>
+            </div>
+
+            <!-- Wizard Steps -->
+            <div class="wizard-container">
+                <!-- Step 1: License -->
+                <div class="wizard-step active" id="step1">
+                    <h3><i class="fas fa-file-invoice-dollar"></i> License Selection</h3>
+                    <p>Which Windows 365 license model fits your needs?</p>
+                    
+                    <div class="options-grid">
+                        <div class="option-card" data-value="enterprise">
+                            <div class="option-header">
+                                <h4>Windows 365 Enterprise</h4>
+                                <span class="badge badge-recommended">Recommended</span>
+                            </div>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Full Intune integration</li>
+                                <li><i class="fas fa-check"></i> Azure Network Connection support</li>
+                                <li><i class="fas fa-check"></i> Custom images</li>
+                                <li><i class="fas fa-check"></i> Granular provisioning policies</li>
+                                <li><i class="fas fa-check"></i> Hybrid Entra ID join option</li>
+                            </ul>
+                            <p class="option-note">Best for: Organizations with existing Microsoft 365 E3/E5 or EMS</p>
+                        </div>
+                        
+                        <div class="option-card" data-value="business">
+                            <div class="option-header">
+                                <h4>Windows 365 Business</h4>
+                            </div>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Simple setup via windows365.microsoft.com</li>
+                                <li><i class="fas fa-check"></i> No Azure subscription required</li>
+                                <li><i class="fas fa-check"></i> Self-service for users</li>
+                                <li><i class="fas fa-times"></i> Limited to 300 users</li>
+                                <li><i class="fas fa-times"></i> Entra ID Join only</li>
+                                <li><i class="fas fa-times"></i> Microsoft Hosted Network only</li>
+                                <li><i class="fas fa-times"></i> Gallery images only</li>
+                            </ul>
+                            <p class="option-note">Best for: Small businesses, quick pilots</p>
+                        </div>
+
+                        <div class="option-card" data-value="frontline">
+                            <div class="option-header">
+                                <h4>Windows 365 Frontline</h4>
+                            </div>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Shared Cloud PC model</li>
+                                <li><i class="fas fa-check"></i> Cost-effective for shift workers</li>
+                                <li><i class="fas fa-check"></i> 3 users per license</li>
+                                <li><i class="fas fa-check"></i> Full Enterprise features</li>
+                                <li><i class="fas fa-times"></i> Concurrent use limits</li>
+                            </ul>
+                            <p class="option-note">Best for: Shift workers, shared workstations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Identity -->
+                <div class="wizard-step" id="step2">
+                    <h3><i class="fas fa-id-card"></i> Identity Configuration</h3>
+                    <p>How should Cloud PCs join your directory?</p>
+                    
+                    <div class="step-layout">
+                        <div class="step-left">
+                            <div class="options-grid">
+                                <div class="option-card" data-value="entra">
+                                    <div class="option-header">
+                                        <h4>Microsoft Entra ID Join</h4>
+                                        <span class="badge badge-recommended">Recommended</span>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Cloud-native</li>
+                                        <li><i class="fas fa-check"></i> No on-prem infra</li>
+                                        <li><i class="fas fa-check"></i> Simple setup</li>
+                                        <li><i class="fas fa-check"></i> Works with MHN</li>
+                                        <li><i class="fas fa-check"></i> SSO to cloud apps</li>
+                                        <li><i class="fas fa-check"></i> Kerberos support*</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="option-card" data-value="hybrid">
+                                    <div class="option-header">
+                                        <h4>Hybrid Entra ID Join</h4>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> On-prem resources</li>
+                                        <li><i class="fas fa-check"></i> Native Kerberos</li>
+                                        <li><i class="fas fa-check"></i> Group Policy</li>
+                                        <li><i class="fas fa-times"></i> Requires ANC</li>
+                                        <li><i class="fas fa-times"></i> Complex setup</li>
+                                        <li><i class="fas fa-times"></i> DC connectivity</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="decision-help">
+                                <h4><i class="fas fa-balance-scale"></i> Quick Decision Matrix</h4>
+                                <table class="comparison-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Scenario</th>
+                                            <th>Recommendation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Cloud-first org</td>
+                                            <td><span class="tag tag-entra">Entra ID</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>File shares (SMB)</td>
+                                            <td><span class="tag tag-either">Either*</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Legacy NTLM apps</td>
+                                            <td><span class="tag tag-hybrid">Hybrid</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Group Policy required</td>
+                                            <td><span class="tag tag-hybrid">Hybrid</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Remote workers</td>
+                                            <td><span class="tag tag-entra">Entra ID</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="step-right">
+                            <!-- Dynamic Key Considerations -->
+                            <div class="considerations-panel expanded" id="identity-considerations-panel">
+                                <div class="considerations-header">
+                                    <h4><i class="fas fa-lightbulb"></i> Key Considerations</h4>
+                                </div>
+                                
+                                <!-- Default state - no selection -->
+                                <div class="considerations-content active" id="identity-default">
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-hand-pointer"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Select an identity option</h5>
+                                            <p>Choose an identity configuration to see relevant considerations and guidance.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Entra ID Join selected - Recommended -->
+                                <div class="considerations-content" id="identity-entra">
+                                    <div class="consideration-item highlight recommended">
+                                        <div class="consideration-icon"><i class="fas fa-star"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Recommended Approach</h5>
+                                            <p>Microsoft Entra ID Join is the <strong>modern, cloud-native approach</strong> and recommended for most deployments.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item highlight">
+                                        <div class="consideration-icon"><i class="fas fa-key"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>On-prem access? You're covered!</h5>
+                                            <p><strong>Entra ID Kerberos</strong> enables SSO to on-premises file shares and apps - no Hybrid Join needed!</p>
+                                            <ul>
+                                                <li>Access file servers via SMB with Kerberos</li>
+                                                <li>No DC line-of-sight from Cloud PC required</li>
+                                                <li>Works with AD Connect + password hash sync</li>
+                                            </ul>
+                                            <a href="https://learn.microsoft.com/en-us/entra/identity/devices/howto-authentication-kerberos-security-key" target="_blank" class="learn-more-link">
+                                                <i class="fas fa-external-link-alt"></i> Learn more
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-bolt"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Simpler, faster deployment</h5>
+                                            <p>No domain controller connectivity needed. Works with Microsoft Hosted Network for zero infrastructure setup.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-shield-alt"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Better security posture</h5>
+                                            <p>Cloud-native identity with Conditional Access, passwordless auth, and no legacy protocols.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hybrid Join selected - Trade-offs -->
+                                <div class="considerations-content" id="identity-hybrid">
+                                    <div class="consideration-item warning">
+                                        <div class="consideration-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Additional complexity</h5>
+                                            <p>Hybrid Join adds significant infrastructure requirements. <strong>Consider if Entra ID Join with Kerberos could meet your needs instead.</strong></p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-server"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Infrastructure requirements</h5>
+                                            <ul>
+                                                <li>Azure Network Connection (Azure subscription required)</li>
+                                                <li>VPN Gateway or ExpressRoute to on-premises</li>
+                                                <li>Domain Controller connectivity from Cloud PCs</li>
+                                                <li>Azure AD Connect with device writeback</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-clock"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Longer provisioning time</h5>
+                                            <p>Domain join adds time to provisioning. Failed joins require troubleshooting DC connectivity.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-check-circle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>When Hybrid is the right choice</h5>
+                                            <ul>
+                                                <li>Legacy apps requiring NTLM authentication</li>
+                                                <li>Strict Group Policy requirements</li>
+                                                <li>Regulatory compliance mandating domain join</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Networking -->
+                <div class="wizard-step" id="step3">
+                    <h3><i class="fas fa-network-wired"></i> Network Configuration</h3>
+                    <p>How should your Cloud PCs connect to resources?</p>
+                    
+                    <div class="step-layout">
+                        <div class="step-left">
+                            <div class="options-grid">
+                                <div class="option-card" data-value="microsoft-hosted">
+                                    <div class="option-header">
+                                        <h4>Microsoft Hosted Network</h4>
+                                        <span class="badge badge-recommended">Simplest</span>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Zero config</li>
+                                        <li><i class="fas fa-check"></i> Microsoft managed</li>
+                                        <li><i class="fas fa-check"></i> Auto region</li>
+                                        <li><i class="fas fa-check"></i> Built-in internet</li>
+                                        <li><i class="fas fa-times"></i> No VNet access</li>
+                                        <li><i class="fas fa-check"></i> GSA compatible*</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="option-card" data-value="anc">
+                                    <div class="option-header">
+                                        <h4>Azure Network Connection</h4>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Your Azure VNet</li>
+                                        <li><i class="fas fa-check"></i> VPN/ExpressRoute</li>
+                                        <li><i class="fas fa-check"></i> Custom DNS</li>
+                                        <li><i class="fas fa-check"></i> Hybrid Join req</li>
+                                        <li><i class="fas fa-times"></i> Azure sub needed</li>
+                                        <li><i class="fas fa-times"></i> More complexity</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Dynamic Architecture Diagram -->
+                            <div class="architecture-section">
+                                <h4><i class="fas fa-project-diagram"></i> Architecture</h4>
+                                <p class="diagram-note">Updates based on selections</p>
+                                <div class="mermaid-container">
+                                    <div class="mermaid" id="architecture-diagram">
+graph LR
+    U[User] --> W365[Cloud PC]
+    W365 --> M365[Microsoft 365]
+    style W365 fill:#0078d4,color:#fff
+    style M365 fill:#00a4ef,color:#fff
+                                    </div>
+                                </div>
+                                <div class="diagram-legend">
+                                    <span><i class="fas fa-square" style="color:#0078d4"></i> Cloud PC</span>
+                                    <span><i class="fas fa-square" style="color:#107c10"></i> On-Prem</span>
+                                    <span><i class="fas fa-square" style="color:#5c2d91"></i> Azure</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-right">
+                            <!-- Dynamic Key Considerations -->
+                            <div class="considerations-panel expanded" id="network-considerations-panel">
+                                <div class="considerations-header">
+                                    <h4><i class="fas fa-lightbulb"></i> Key Considerations</h4>
+                                </div>
+                                
+                                <!-- Default state -->
+                                <div class="considerations-content active" id="network-default">
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-hand-pointer"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Select a network option</h5>
+                                            <p>Choose a network configuration to see relevant considerations and guidance.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Microsoft Hosted Network - Recommended -->
+                                <div class="considerations-content" id="network-microsoft-hosted">
+                                    <div class="consideration-item highlight recommended">
+                                        <div class="consideration-icon"><i class="fas fa-star"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Recommended Approach</h5>
+                                            <p>Microsoft Hosted Network is the <strong>simplest, fastest path</strong> to Windows 365. Zero infrastructure to manage.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item highlight">
+                                        <div class="consideration-icon"><i class="fas fa-globe-americas"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Need on-prem access? Use Global Secure Access!</h5>
+                                            <p><strong>Entra Private Access</strong> provides VPN-less connectivity to on-premises resources - no Azure Network Connection needed!</p>
+                                            <ul>
+                                                <li>Zero Trust Network Access (ZTNA)</li>
+                                                <li>Per-app Conditional Access policies</li>
+                                                <li>Lightweight connector on-premises</li>
+                                                <li>No inbound firewall rules</li>
+                                            </ul>
+                                            <a href="https://learn.microsoft.com/en-us/entra/global-secure-access/concept-private-access" target="_blank" class="learn-more-link">
+                                                <i class="fas fa-external-link-alt"></i> Learn about Private Access
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-dollar-sign"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>No additional Azure costs</h5>
+                                            <p>No VNet, VPN Gateway, or ExpressRoute required. Microsoft manages all networking infrastructure.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-shield-alt"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Entra Internet Access for security</h5>
+                                            <p>Add cloud-native Secure Web Gateway - web filtering, threat protection, M365 optimization without on-prem proxies.</p>
+                                            <a href="https://learn.microsoft.com/en-us/entra/global-secure-access/concept-internet-access" target="_blank" class="learn-more-link">
+                                                <i class="fas fa-external-link-alt"></i> Learn about Internet Access
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>RDP Shortpath supported</h5>
+                                            <p>Enable public RDP Shortpath for direct UDP connectivity and reduced latency.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Azure Network Connection - Trade-offs -->
+                                <div class="considerations-content" id="network-anc">
+                                    <div class="consideration-item warning">
+                                        <div class="consideration-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Additional cost and complexity</h5>
+                                            <p>ANC requires Azure infrastructure and ongoing management. <strong>Consider if Microsoft Hosted Network with Global Secure Access could meet your needs.</strong></p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-dollar-sign"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Azure costs to consider</h5>
+                                            <ul>
+                                                <li>VPN Gateway: ~$140-350/month (depending on SKU)</li>
+                                                <li>ExpressRoute: $55-500+/month + circuit costs</li>
+                                                <li>Data egress charges for on-prem traffic</li>
+                                                <li>VNet itself is free, but peering has costs</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-tools"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Management overhead</h5>
+                                            <ul>
+                                                <li>Subnet IP address planning (/26 minimum)</li>
+                                                <li>DNS configuration and troubleshooting</li>
+                                                <li>VPN Gateway maintenance and monitoring</li>
+                                                <li>Network security group rules</li>
+                                                <li>ANC health check failures to diagnose</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-clock"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Longer setup time</h5>
+                                            <p>VPN Gateway deployment takes 30-45 minutes. ExpressRoute provisioning can take days. ANC validation adds to provisioning time.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-check-circle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>When ANC is the right choice</h5>
+                                            <ul>
+                                                <li>Hybrid Entra ID Join requirement</li>
+                                                <li>High-bandwidth on-prem data access</li>
+                                                <li>Regulatory requirement for VNet isolation</li>
+                                                <li>Existing Azure infrastructure to leverage</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Image -->
+                <div class="wizard-step" id="step4">
+                    <h3><i class="fas fa-desktop"></i> Image Selection</h3>
+                    <p>What image will your Cloud PCs use?</p>
+                    
+                    <div class="options-grid">
+                        <div class="option-card" data-value="gallery">
+                            <div class="option-header">
+                                <h4>Gallery Image</h4>
+                                <span class="badge badge-recommended">Quick Start</span>
+                            </div>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Pre-configured by Microsoft</li>
+                                <li><i class="fas fa-check"></i> Always up to date</li>
+                                <li><i class="fas fa-check"></i> Windows 11 + Microsoft 365 Apps</li>
+                                <li><i class="fas fa-check"></i> Multiple configurations available</li>
+                                <li><i class="fas fa-check"></i> No image management overhead</li>
+                            </ul>
+                            <div class="gallery-images">
+                                <h5>Available Images:</h5>
+                                <ul>
+                                    <li>Windows 11 Enterprise + Microsoft 365 Apps</li>
+                                    <li>Windows 11 Enterprise</li>
+                                    <li>Windows 10 Enterprise + Microsoft 365 Apps</li>
+                                    <li>Windows 10 Enterprise</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="option-card" data-value="custom">
+                            <div class="option-header">
+                                <h4>Custom Image</h4>
+                            </div>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Pre-install LOB applications</li>
+                                <li><i class="fas fa-check"></i> Standardized configuration</li>
+                                <li><i class="fas fa-check"></i> Faster provisioning (apps pre-installed)</li>
+                                <li><i class="fas fa-times"></i> Requires image management</li>
+                                <li><i class="fas fa-times"></i> Enterprise license only</li>
+                            </ul>
+                            <div class="requirements">
+                                <h5>Requirements:</h5>
+                                <ul>
+                                    <li>Azure subscription with Compute Gallery</li>
+                                    <li>Gen 2 VM image</li>
+                                    <li>Sysprep generalized</li>
+                                    <li>Windows 10/11 Enterprise</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4><i class="fas fa-lightbulb"></i> Pro Tip</h4>
+                        <p>Start with a <strong>Gallery Image</strong> and use <strong>Intune</strong> to deploy applications. This gives you the best of both worlds: quick deployment and centralized app management. Only move to custom images if you have many large applications that significantly slow down provisioning.</p>
+                    </div>
+                </div>
+
+                <!-- Step 5: Security -->
+                <div class="wizard-step" id="step5">
+                    <h3><i class="fas fa-shield-alt"></i> Security Configuration</h3>
+                    <p>Select your security requirements</p>
+                    
+                    <div class="security-options">
+                        <div class="security-category">
+                            <h4>Authentication</h4>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-mfa" checked>
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Multi-Factor Authentication</strong>
+                                    <p>Require MFA for Cloud PC access</p>
+                                </div>
+                                <span class="badge badge-recommended">Recommended</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-sso">
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Single Sign-On</strong>
+                                    <p>Enable SSO to the Cloud PC desktop</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="security-category">
+                            <h4>Conditional Access</h4>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-compliant" checked>
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Require Compliant Device</strong>
+                                    <p>Only allow connections from compliant devices</p>
+                                </div>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-location">
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Location-Based Access</strong>
+                                    <p>Restrict access to specific locations/IPs</p>
+                                </div>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-risk">
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Sign-in Risk Policy</strong>
+                                    <p>Block or require MFA for risky sign-ins</p>
+                                </div>
+                                <span class="badge">Requires P2</span>
+                            </label>
+                        </div>
+
+                        <div class="security-category">
+                            <h4>Endpoint Security</h4>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-defender" checked>
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Microsoft Defender for Endpoint</strong>
+                                    <p>Advanced threat protection for Cloud PCs</p>
+                                </div>
+                                <span class="badge badge-recommended">Recommended</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-bitlocker" checked>
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>BitLocker Encryption</strong>
+                                    <p>Encrypt Cloud PC disks (enabled by default)</p>
+                                </div>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-baselines">
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Security Baselines</strong>
+                                    <p>Apply Microsoft security baselines via Intune</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="security-category">
+                            <h4>Data Protection</h4>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-clipboard">
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Disable Clipboard Redirection</strong>
+                                    <p>Prevent copy/paste between local and Cloud PC</p>
+                                </div>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-drive">
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Disable Drive Redirection</strong>
+                                    <p>Prevent access to local drives from Cloud PC</p>
+                                </div>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="sec-watermark">
+                                <span class="checkmark"></span>
+                                <div class="option-content">
+                                    <strong>Screen Capture Protection</strong>
+                                    <p>Watermarking and screenshot prevention</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: Summary -->
+                <div class="wizard-step" id="step6">
+                    <h3><i class="fas fa-clipboard-check"></i> Deployment Summary</h3>
+                    <p>Review your configuration and get your deployment checklist</p>
+                    
+                    <div class="summary-container">
+                        <div class="summary-section">
+                            <h4>Your Configuration</h4>
+                            <div class="summary-grid" id="summaryGrid">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="summary-section">
+                            <h4>Pre-Deployment Checklist</h4>
+                            <div class="checklist" id="deploymentChecklist">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="summary-section">
+                            <h4>Estimated Timeline</h4>
+                            <div class="timeline" id="timeline">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="export-buttons">
+                        <button class="btn btn-primary" onclick="exportSummary()">
+                            <i class="fas fa-download"></i> Export Checklist
+                        </button>
+                        <button class="btn btn-secondary" onclick="printSummary()">
+                            <i class="fas fa-print"></i> Print Summary
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="wizard-nav">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checklist Section -->
+    <section id="checklist" class="section">
+        <div class="container">
+            <h2>Quick Reference Checklist</h2>
+            <p class="section-subtitle">Essential steps for any Windows 365 deployment</p>
+
+            <div class="checklist-grid">
+                <div class="checklist-card">
+                    <h4><span class="step-number">1</span> Prerequisites</h4>
+                    <ul class="checklist-items">
+                        <li><input type="checkbox"> Verify licensing (E3/E5/EMS + W365)</li>
+                        <li><input type="checkbox"> Azure subscription (if using ANC)</li>
+                        <li><input type="checkbox"> Intune configured</li>
+                        <li><input type="checkbox"> Users synced to Entra ID</li>
+                        <li><input type="checkbox"> Network requirements reviewed</li>
+                    </ul>
+                </div>
+
+                <div class="checklist-card">
+                    <h4><span class="step-number">2</span> Network Setup</h4>
+                    <ul class="checklist-items">
+                        <li><input type="checkbox"> Choose MHN or ANC</li>
+                        <li><input type="checkbox"> Create Azure VNet (if ANC)</li>
+                        <li><input type="checkbox"> Configure DNS</li>
+                        <li><input type="checkbox"> Set up VPN/ExpressRoute (if needed)</li>
+                        <li><input type="checkbox"> Create Azure Network Connection</li>
+                    </ul>
+                </div>
+
+                <div class="checklist-card">
+                    <h4><span class="step-number">3</span> Identity Config</h4>
+                    <ul class="checklist-items">
+                        <li><input type="checkbox"> Configure join type</li>
+                        <li><input type="checkbox"> Set up Entra ID Connect (if Hybrid)</li>
+                        <li><input type="checkbox"> Enable device writeback (if Hybrid)</li>
+                        <li><input type="checkbox"> Configure SSO settings</li>
+                        <li><input type="checkbox"> Test user sign-in</li>
+                    </ul>
+                </div>
+
+                <div class="checklist-card">
+                    <h4><span class="step-number">4</span> Provisioning</h4>
+                    <ul class="checklist-items">
+                        <li><input type="checkbox"> Create provisioning policy</li>
+                        <li><input type="checkbox"> Select image (Gallery/Custom)</li>
+                        <li><input type="checkbox"> Configure Cloud PC size</li>
+                        <li><input type="checkbox"> Assign to user group</li>
+                        <li><input type="checkbox"> Test provisioning</li>
+                    </ul>
+                </div>
+
+                <div class="checklist-card">
+                    <h4><span class="step-number">5</span> Security</h4>
+                    <ul class="checklist-items">
+                        <li><input type="checkbox"> Configure Conditional Access</li>
+                        <li><input type="checkbox"> Enable MFA</li>
+                        <li><input type="checkbox"> Deploy security baselines</li>
+                        <li><input type="checkbox"> Configure Defender for Endpoint</li>
+                        <li><input type="checkbox"> Set RDP redirection policies</li>
+                    </ul>
+                </div>
+
+                <div class="checklist-card">
+                    <h4><span class="step-number">6</span> User Experience</h4>
+                    <ul class="checklist-items">
+                        <li><input type="checkbox"> Deploy Windows App</li>
+                        <li><input type="checkbox"> Configure user settings</li>
+                        <li><input type="checkbox"> Set up app deployment</li>
+                        <li><input type="checkbox"> Create user documentation</li>
+                        <li><input type="checkbox"> Plan user training</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="section section-alt">
+        <div class="container">
+            <h2>Resources</h2>
+            <p class="section-subtitle">Official documentation and helpful links</p>
+
+            <div class="resources-grid">
+                <a href="https://learn.microsoft.com/windows-365/" target="_blank" class="resource-card">
+                    <i class="fas fa-book"></i>
+                    <h4>Official Documentation</h4>
+                    <p>Microsoft Learn - Windows 365</p>
+                </a>
+                <a href="https://learn.microsoft.com/windows-365/enterprise/requirements" target="_blank" class="resource-card">
+                    <i class="fas fa-list-check"></i>
+                    <h4>Requirements</h4>
+                    <p>Full list of prerequisites</p>
+                </a>
+                <a href="https://learn.microsoft.com/windows-365/enterprise/deployment-overview" target="_blank" class="resource-card">
+                    <i class="fas fa-rocket"></i>
+                    <h4>Deployment Guide</h4>
+                    <p>Step-by-step deployment</p>
+                </a>
+                <a href="https://windows365.microsoft.com" target="_blank" class="resource-card">
+                    <i class="fas fa-desktop"></i>
+                    <h4>Windows 365 Portal</h4>
+                    <p>Access Cloud PCs</p>
+                </a>
+                <a href="https://intune.microsoft.com" target="_blank" class="resource-card">
+                    <i class="fas fa-cog"></i>
+                    <h4>Intune Admin Center</h4>
+                    <p>Manage Cloud PCs</p>
+                </a>
+                <a href="https://learn.microsoft.com/windows-365/enterprise/troubleshooting" target="_blank" class="resource-card">
+                    <i class="fas fa-wrench"></i>
+                    <h4>Troubleshooting</h4>
+                    <p>Common issues and solutions</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Windows 365 Deployment Guide | Not affiliated with Microsoft</p>
+            <p>Always refer to official Microsoft documentation for the latest requirements</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
