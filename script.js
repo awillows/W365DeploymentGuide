@@ -438,99 +438,307 @@ function updateNavigationButtons() {
 function generateSummary() {
     generateExecutiveSummary();
     generateSummaryDiagram();
-    generateConfigSummary();
-    generateNextSteps();
-    generateProvisioningPolicyCode();
 }
 
 // Generate Executive Summary
 function generateExecutiveSummary() {
     const container = document.getElementById('execSummary');
     
-    const licenseNames = {
-        'enterprise': 'Windows 365 Enterprise',
-        'business': 'Windows 365 Business',
-        'frontline': 'Windows 365 Frontline'
-    };
+    const license = state.selections.license;
+    const identity = state.selections.identity;
+    const network = state.selections.network;
+    const image = state.selections.image;
+    const updates = state.selections.updates;
+    const apps = state.selections.apps;
+    const data = state.selections.data;
     
-    const identityDesc = {
-        'entra': 'cloud-native Microsoft Entra ID Join',
-        'hybrid': 'Hybrid Entra ID Join with on-premises AD integration'
-    };
+    // Determine complexity and timeline
+    let complexity = 'Low';
+    let timeline = '3-5 business days';
+    let infrastructureReqs = 'Minimal';
     
-    const networkDesc = {
-        'microsoft-hosted': 'Microsoft Hosted Network (no Azure infrastructure required)',
-        'anc': 'Azure Network Connection (custom networking with your Azure VNet)'
-    };
-    
-    const imageDesc = {
-        'gallery': 'Microsoft Gallery images (pre-configured, auto-updated)',
-        'custom': 'Custom images from your Azure Compute Gallery'
-    };
-    
-    const updateDesc = {
-        'autopatch': 'Windows Autopatch for fully automated update management',
-        'wufb': 'Windows Update for Business with custom ring deployment',
-        'wsus': 'WSUS/SCCM for traditional update management'
-    };
-    
-    // Determine complexity
-    let complexity = 'Simple';
-    let complexityIcon = 'fa-smile';
-    let complexityClass = 'recommended';
-    
-    if (state.selections.network === 'anc' || state.selections.identity === 'hybrid' || state.selections.image === 'custom') {
-        complexity = 'Moderate';
-        complexityIcon = 'fa-meh';
-        complexityClass = '';
+    if (network === 'anc' || identity === 'hybrid' || image === 'custom') {
+        complexity = 'Medium';
+        timeline = '1-2 weeks';
+        infrastructureReqs = 'Moderate';
     }
-    if (state.selections.network === 'anc' && state.selections.identity === 'hybrid') {
-        complexity = 'Complex';
-        complexityIcon = 'fa-frown';
-        complexityClass = '';
+    if (network === 'anc' && identity === 'hybrid') {
+        complexity = 'High';
+        timeline = '2-4 weeks';
+        infrastructureReqs = 'Significant';
     }
     
-    // Estimate timeline
-    let timeline = '3-5 days';
-    if (complexity === 'Moderate') timeline = '1-2 weeks';
-    if (complexity === 'Complex') timeline = '2-4 weeks';
-    
-    const isRecommended = state.selections.identity === 'entra' && 
-                          state.selections.network === 'microsoft-hosted' && 
-                          state.selections.image === 'gallery' &&
-                          state.selections.updates === 'autopatch';
+    const isStreamlined = identity === 'entra' && network === 'microsoft-hosted' && image === 'gallery';
+    const generatedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     
     let html = `
-        <p>This deployment plan uses <strong>${licenseNames[state.selections.license]}</strong> with ${identityDesc[state.selections.identity]}. 
-        Cloud PCs will connect via ${networkDesc[state.selections.network]} and use ${imageDesc[state.selections.image]}.</p>
-    `;
-    
-    if (isRecommended) {
-        html += `
-            <div class="highlight-box recommended">
-                <i class="fas fa-check-circle"></i>
-                <div>
-                    <strong>Streamlined Configuration</strong><br>
-                    You've selected Microsoft's recommended approach for the fastest, simplest deployment with minimal infrastructure requirements.
+        <div class="plan-meta">
+            <span class="plan-date">Generated: ${generatedDate}</span>
+        </div>
+
+        <div class="plan-section">
+            <h5>Overview</h5>
+            <p>This document outlines the deployment plan for Windows 365 Cloud PCs within the organisation. 
+            The selected configuration ${isStreamlined ? 'follows Microsoft\'s recommended streamlined approach, minimising infrastructure requirements and accelerating time-to-value' : 'has been tailored to meet specific organisational requirements'}.</p>
+            
+            <div class="plan-metrics">
+                <div class="metric">
+                    <span class="metric-label">Complexity</span>
+                    <span class="metric-value ${complexity.toLowerCase()}">${complexity}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Est. Timeline</span>
+                    <span class="metric-value">${timeline}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Infrastructure</span>
+                    <span class="metric-value">${infrastructureReqs}</span>
                 </div>
             </div>
-        `;
-    }
-    
-    html += `
-        <div class="highlight-box">
-            <i class="fas fa-clock"></i>
-            <div>
-                <strong>Estimated Timeline: ${timeline}</strong><br>
-                Deployment complexity: ${complexity}
+        </div>
+
+        <div class="plan-section">
+            <h5>1. Licensing</h5>
+            <div class="decision-box">
+                <div class="decision-choice">
+                    <strong>${license === 'enterprise' ? 'Windows 365 Enterprise' : license === 'frontline' ? 'Windows 365 Frontline' : 'Windows 365 Business'}</strong>
+                </div>
+                <div class="decision-rationale">
+                    ${license === 'enterprise' ? `
+                        <p><strong>Why Enterprise:</strong> Provides full management capabilities through Microsoft Intune, supports both Microsoft Hosted Network and Azure Network Connection options, and enables custom image deployment. Requires existing Microsoft 365 E3/E5 or equivalent licensing.</p>
+                        <p><strong>Prerequisites:</strong> Windows E3/E5 license, Microsoft Intune license, Microsoft Entra ID P1 (all typically included in Microsoft 365 E3/E5).</p>
+                    ` : license === 'frontline' ? `
+                        <p><strong>Why Frontline:</strong> Cost-effective option for shift workers and part-time employees who share Cloud PCs. Users access Cloud PCs on a rotating basis rather than having dedicated machines.</p>
+                        <p><strong>Prerequisites:</strong> Windows E3/E5 license, Microsoft Intune license, Microsoft Entra ID P1. Frontline-specific license assignment.</p>
+                    ` : `
+                        <p><strong>Why Business:</strong> Simplified licensing model ideal for smaller organisations. Includes Entra ID and basic Intune capabilities without requiring separate licenses.</p>
+                        <p><strong>Limitations:</strong> Maximum 300 users, Microsoft Hosted Network only, no custom images, limited management features compared to Enterprise.</p>
+                    `}
+                </div>
             </div>
         </div>
-        
-        <div class="config-tags">
-            <span class="config-tag">${state.selections.identity === 'entra' ? 'Entra ID Join' : 'Hybrid Join'}</span>
-            <span class="config-tag">${state.selections.network === 'microsoft-hosted' ? 'Microsoft Hosted' : 'Azure Network'}</span>
-            <span class="config-tag secondary">${state.selections.image === 'gallery' ? 'Gallery Image' : 'Custom Image'}</span>
-            <span class="config-tag secondary">${updateDesc[state.selections.updates]?.split(' ')[0] || 'Updates'}</span>
+
+        <div class="plan-section">
+            <h5>2. Identity & Directory Services</h5>
+            <div class="decision-box">
+                <div class="decision-choice">
+                    <strong>${identity === 'entra' ? 'Microsoft Entra ID Join (Cloud-Native)' : 'Hybrid Microsoft Entra ID Join'}</strong>
+                    ${identity === 'entra' ? '<span class="badge badge-recommended">Recommended</span>' : ''}
+                </div>
+                <div class="decision-rationale">
+                    ${identity === 'entra' ? `
+                        <p><strong>Why Entra ID Join:</strong> Cloud-native identity approach that eliminates dependency on on-premises Active Directory infrastructure. Cloud PCs are joined directly to Microsoft Entra ID.</p>
+                        <p><strong>Benefits:</strong></p>
+                        <ul>
+                            <li>No line-of-sight to domain controllers required</li>
+                            <li>Simplified deployment with Microsoft Hosted Network</li>
+                            <li>Single Sign-On (SSO) to Microsoft 365 and Entra ID-integrated applications</li>
+                            <li>Modern authentication with passwordless options</li>
+                        </ul>
+                        <p><strong>On-premises resource access:</strong> Entra ID Kerberos enables SSO to on-premises file shares and legacy applications without Hybrid Join. Requires Entra Connect with password hash synchronisation.</p>
+                    ` : `
+                        <p><strong>Why Hybrid Join:</strong> Cloud PCs are joined to both on-premises Active Directory and Microsoft Entra ID, maintaining compatibility with traditional infrastructure.</p>
+                        <p><strong>Requirements:</strong></p>
+                        <ul>
+                            <li>Azure Network Connection (ANC) is mandatory</li>
+                            <li>Direct line-of-sight from Cloud PCs to Domain Controllers</li>
+                            <li>Entra Connect configured with device writeback enabled</li>
+                            <li>Network connectivity via VPN Gateway or ExpressRoute</li>
+                        </ul>
+                        <p><strong>Use cases:</strong> Required for Group Policy management, legacy NTLM authentication, or compliance requirements mandating domain membership.</p>
+                        <p><strong>Consideration:</strong> Increases deployment complexity and creates dependency on on-premises infrastructure availability.</p>
+                    `}
+                </div>
+            </div>
+        </div>
+
+        <div class="plan-section">
+            <h5>3. Network Configuration</h5>
+            <div class="decision-box">
+                <div class="decision-choice">
+                    <strong>${network === 'microsoft-hosted' ? 'Microsoft Hosted Network' : 'Azure Network Connection (ANC)'}</strong>
+                    ${network === 'microsoft-hosted' ? '<span class="badge badge-recommended">Recommended</span>' : ''}
+                </div>
+                <div class="decision-rationale">
+                    ${network === 'microsoft-hosted' ? `
+                        <p><strong>Why Microsoft Hosted Network:</strong> Microsoft manages all network infrastructure. No Azure subscription or virtual network configuration required.</p>
+                        <p><strong>Benefits:</strong></p>
+                        <ul>
+                            <li>Zero network infrastructure to deploy or maintain</li>
+                            <li>Automatic regional optimisation for best performance</li>
+                            <li>No Azure networking costs</li>
+                            <li>Fastest path to deployment</li>
+                        </ul>
+                        <p><strong>Internet access:</strong> Cloud PCs access the internet directly through Microsoft's network. Corporate resources are accessed via the internet (SaaS applications, VPN client if needed).</p>
+                    ` : `
+                        <p><strong>Why Azure Network Connection:</strong> Cloud PCs are provisioned within your Azure Virtual Network, enabling direct access to Azure and on-premises resources.</p>
+                        <p><strong>Requirements:</strong></p>
+                        <ul>
+                            <li>Azure subscription with appropriate permissions</li>
+                            <li>Azure Virtual Network with dedicated subnet (/26 minimum recommended)</li>
+                            <li>Network connectivity to any required on-premises resources</li>
+                            ${identity === 'hybrid' ? '<li>VPN Gateway or ExpressRoute for Domain Controller access</li>' : ''}
+                        </ul>
+                        <p><strong>Use cases:</strong> Direct access to Azure resources, on-premises connectivity without VPN client, compliance requirements for network isolation, or Hybrid Entra ID Join.</p>
+                        <p><strong>Cost consideration:</strong> Azure networking costs apply (VNet, bandwidth, VPN Gateway if applicable).</p>
+                    `}
+                </div>
+            </div>
+        </div>
+
+        <div class="plan-section">
+            <h5>4. Image Strategy</h5>
+            <div class="decision-box">
+                <div class="decision-choice">
+                    <strong>${image === 'gallery' ? 'Microsoft Gallery Images' : 'Custom Images'}</strong>
+                    ${image === 'gallery' ? '<span class="badge badge-recommended">Recommended</span>' : ''}
+                </div>
+                <div class="decision-rationale">
+                    ${image === 'gallery' ? `
+                        <p><strong>Why Gallery Images:</strong> Pre-built, optimised images maintained by Microsoft. Always current with latest security updates.</p>
+                        <p><strong>Available images:</strong></p>
+                        <ul>
+                            <li>Windows 11 Enterprise + Microsoft 365 Apps</li>
+                            <li>Windows 11 Enterprise</li>
+                            <li>Windows 10 Enterprise + Microsoft 365 Apps</li>
+                            <li>Windows 10 Enterprise</li>
+                        </ul>
+                        <p><strong>Application deployment:</strong> Applications should be deployed via Microsoft Intune rather than baked into images. This approach provides centralised management, easier updates, and user self-service through Company Portal.</p>
+                    ` : `
+                        <p><strong>Why Custom Images:</strong> Organisation-specific images with pre-installed applications and configurations, stored in Azure Compute Gallery.</p>
+                        <p><strong>Requirements:</strong></p>
+                        <ul>
+                            <li>Azure subscription with Compute Gallery</li>
+                            <li>Generation 2 VM image</li>
+                            <li>Windows 10/11 Enterprise</li>
+                            <li>Sysprep generalised</li>
+                        </ul>
+                        <p><strong>Maintenance:</strong> Custom images require regular updates to include Windows security patches. Recommend monthly image refresh cycle with testing before production deployment.</p>
+                        <p><strong>Recommendation:</strong> Consider a hybrid approach—include only large or complex applications in the image, deploy remaining applications via Intune.</p>
+                    `}
+                </div>
+            </div>
+        </div>
+
+        <div class="plan-section">
+            <h5>5. Update Management</h5>
+            <div class="decision-box">
+                <div class="decision-choice">
+                    <strong>${updates === 'autopatch' ? 'Windows Autopatch' : updates === 'wufb' ? 'Windows Update for Business' : 'WSUS / Configuration Manager'}</strong>
+                    ${updates === 'autopatch' ? '<span class="badge badge-recommended">Recommended</span>' : ''}
+                </div>
+                <div class="decision-rationale">
+                    ${updates === 'autopatch' ? `
+                        <p><strong>Why Autopatch:</strong> Fully managed update service. Microsoft handles update deployment, ring progression, and rollback if issues detected.</p>
+                        <p><strong>Coverage:</strong> Windows quality updates, Windows feature updates, Microsoft 365 Apps updates, Microsoft Edge updates, and Teams updates.</p>
+                        <p><strong>Benefits:</strong></p>
+                        <ul>
+                            <li>Automated ring-based deployment (Test → First → Fast → Broad)</li>
+                            <li>Built-in rollback capabilities</li>
+                            <li>Service health monitoring and reporting</li>
+                            <li>Minimal IT overhead</li>
+                        </ul>
+                    ` : updates === 'wufb' ? `
+                        <p><strong>Why Windows Update for Business:</strong> Cloud-based update management with customisable deployment rings and deferral periods.</p>
+                        <p><strong>Configuration:</strong></p>
+                        <ul>
+                            <li>Define update rings in Intune (e.g., Pilot, Production)</li>
+                            <li>Set quality update deferral periods</li>
+                            <li>Set feature update deferral periods</li>
+                            <li>Configure maintenance windows</li>
+                        </ul>
+                        <p><strong>Consideration:</strong> Requires ongoing management and monitoring. Consider Windows Autopatch for reduced operational overhead.</p>
+                    ` : `
+                        <p><strong>Why WSUS/ConfigMgr:</strong> Traditional update management using existing on-premises infrastructure.</p>
+                        <p><strong>Requirements:</strong></p>
+                        <ul>
+                            <li>Azure Network Connection for WSUS server access</li>
+                            <li>ConfigMgr co-management if using Configuration Manager</li>
+                            <li>Existing WSUS/ConfigMgr infrastructure</li>
+                        </ul>
+                        <p><strong>Consideration:</strong> This approach maintains existing processes but adds complexity. Consider migrating to Windows Update for Business or Autopatch for cloud-native management.</p>
+                    `}
+                </div>
+            </div>
+        </div>
+
+        <div class="plan-section">
+            <h5>6. Application Delivery</h5>
+            <div class="decision-box">
+                <div class="decision-choice">
+                    <strong>${apps === 'intune' ? 'Microsoft Intune' : apps === 'intune-image' ? 'Intune + Custom Image' : 'Configuration Manager / Co-management'}</strong>
+                    ${apps === 'intune' ? '<span class="badge badge-recommended">Recommended</span>' : ''}
+                </div>
+                <div class="decision-rationale">
+                    ${apps === 'intune' ? `
+                        <p><strong>Why Intune:</strong> Cloud-native application management with support for multiple application types and deployment scenarios.</p>
+                        <p><strong>Supported application types:</strong></p>
+                        <ul>
+                            <li>Microsoft 365 Apps (built-in deployment)</li>
+                            <li>Win32 applications (.intunewin packages)</li>
+                            <li>Microsoft Store apps</li>
+                            <li>Line-of-business applications</li>
+                            <li>Web links and PWAs</li>
+                        </ul>
+                        <p><strong>User experience:</strong> Company Portal provides self-service application installation. Required apps install automatically during or after provisioning.</p>
+                    ` : apps === 'intune-image' ? `
+                        <p><strong>Why Hybrid Approach:</strong> Large or complex applications pre-installed in custom image, remaining applications deployed via Intune.</p>
+                        <p><strong>Image candidates:</strong></p>
+                        <ul>
+                            <li>Large applications (>5GB) to reduce provisioning time</li>
+                            <li>Applications with complex dependencies</li>
+                            <li>Applications requiring specific install sequences</li>
+                        </ul>
+                        <p><strong>Intune deployment:</strong> Smaller applications, frequently updated software, and user-requested applications via Company Portal.</p>
+                    ` : `
+                        <p><strong>Why Configuration Manager:</strong> Continue using existing ConfigMgr infrastructure through co-management.</p>
+                        <p><strong>Requirements:</strong></p>
+                        <ul>
+                            <li>Azure Network Connection for ConfigMgr infrastructure access</li>
+                            <li>Co-management enabled</li>
+                            <li>Cloud Management Gateway (recommended)</li>
+                        </ul>
+                        <p><strong>Consideration:</strong> Co-management allows gradual migration to Intune. Consider shifting application workload to Intune over time.</p>
+                    `}
+                </div>
+            </div>
+        </div>
+
+        <div class="plan-section">
+            <h5>7. User Data & Storage</h5>
+            <div class="decision-box">
+                <div class="decision-choice">
+                    <strong>${data === 'onedrive' ? 'OneDrive for Business' : data === 'hybrid-storage' ? 'OneDrive + Network File Shares' : 'Traditional File Shares'}</strong>
+                    ${data === 'onedrive' ? '<span class="badge badge-recommended">Recommended</span>' : ''}
+                </div>
+                <div class="decision-rationale">
+                    ${data === 'onedrive' ? `
+                        <p><strong>Why OneDrive:</strong> Cloud-native storage with automatic sync, backup, and cross-device access.</p>
+                        <p><strong>Key features:</strong></p>
+                        <ul>
+                            <li>Known Folder Move (Desktop, Documents, Pictures automatically synced)</li>
+                            <li>Files On-Demand (access files without downloading)</li>
+                            <li>Version history and ransomware recovery</li>
+                            <li>Seamless roaming between devices</li>
+                        </ul>
+                        <p><strong>Configuration:</strong> Deploy OneDrive sync client settings via Intune. Enable Known Folder Move silently to ensure user data is protected.</p>
+                    ` : data === 'hybrid-storage' ? `
+                        <p><strong>Why Hybrid:</strong> OneDrive for user data combined with traditional file shares for departmental or shared data.</p>
+                        <p><strong>OneDrive:</strong> Personal files, Desktop, Documents via Known Folder Move.</p>
+                        <p><strong>File shares:</strong> Shared departmental data, legacy application data stores.</p>
+                        <p><strong>Access method:</strong> ${identity === 'entra' ? 'Entra ID Kerberos enables SSO to on-premises file shares without Hybrid Join.' : 'Direct access via Azure Network Connection.'}</p>
+                    ` : `
+                        <p><strong>Why File Shares:</strong> Continue using existing file server infrastructure.</p>
+                        <p><strong>Requirements:</strong></p>
+                        <ul>
+                            <li>Azure Network Connection for file server access</li>
+                            <li>Appropriate network connectivity and DNS resolution</li>
+                            ${identity === 'hybrid' ? '<li>Domain membership for authentication</li>' : '<li>Entra ID Kerberos or mapped drives with saved credentials</li>'}
+                        </ul>
+                        <p><strong>Recommendation:</strong> Consider migrating to OneDrive for user data to enable seamless roaming and reduce infrastructure dependency.</p>
+                    `}
+                </div>
+            </div>
         </div>
     `;
     
@@ -638,161 +846,9 @@ function generateSummaryDiagram() {
 }
 
 // Generate configuration summary
-function generateConfigSummary() {
-    const grid = document.getElementById('summaryGrid');
-    
-    const licenseNames = {
-        'enterprise': 'Windows 365 Enterprise',
-        'business': 'Windows 365 Business',
-        'frontline': 'Windows 365 Frontline'
-    };
-    
-    const identityNames = {
-        'entra': 'Microsoft Entra ID Join',
-        'hybrid': 'Hybrid Entra ID Join'
-    };
-    
-    const networkNames = {
-        'microsoft-hosted': 'Microsoft Hosted Network',
-        'anc': 'Azure Network Connection'
-    };
-    
-    const imageNames = {
-        'gallery': 'Gallery Image',
-        'custom': 'Custom Image'
-    };
-    
-    const updateNames = {
-        'autopatch': 'Windows Autopatch',
-        'wufb': 'Windows Update for Business',
-        'wsus': 'WSUS / Legacy'
-    };
-    
-    const appNames = {
-        'intune': 'Microsoft Intune',
-        'intune-image': 'Intune + Custom Image',
-        'sccm': 'SCCM / Co-management'
-    };
-    
-    const dataNames = {
-        'onedrive': 'OneDrive for Business',
-        'hybrid-storage': 'Hybrid (OneDrive + File Shares)',
-        'fileshares': 'Traditional File Shares'
-    };
-    
-    grid.innerHTML = `
-        <div class="summary-item">
-            <label>License</label>
-            <div class="value">${licenseNames[state.selections.license] || 'Not selected'}</div>
-        </div>
-        <div class="summary-item">
-            <label>Identity</label>
-            <div class="value">${identityNames[state.selections.identity] || 'Not selected'}</div>
-        </div>
-        <div class="summary-item">
-            <label>Network</label>
-            <div class="value">${networkNames[state.selections.network] || 'Not selected'}</div>
-        </div>
-        <div class="summary-item">
-            <label>Image</label>
-            <div class="value">${imageNames[state.selections.image] || 'Not selected'}</div>
-        </div>
-        <div class="summary-item">
-            <label>Updates</label>
-            <div class="value">${updateNames[state.selections.updates] || 'Not selected'}</div>
-        </div>
-        <div class="summary-item">
-            <label>App Deployment</label>
-            <div class="value">${appNames[state.selections.apps] || 'Not selected'}</div>
-        </div>
-        <div class="summary-item">
-            <label>User Data</label>
-            <div class="value">${dataNames[state.selections.data] || 'Not selected'}</div>
-        </div>
-    `;
-}
-
-// Generate Next Steps
-function generateNextSteps() {
-    const container = document.getElementById('nextSteps');
-    const steps = [];
-    
-    // Step 1: Always create user group
-    steps.push({
-        title: 'Create Entra ID User Group',
-        description: 'Create a security group for your Cloud PC users',
-        link: 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/GroupsManagementMenuBlade/~/AllGroups'
-    });
-    
-    // Step 2: Network (if ANC)
-    if (state.selections.network === 'anc') {
-        steps.push({
-            title: 'Configure Azure Network Connection',
-            description: 'Set up VNet and create the Azure Network Connection',
-            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365AzureNetworkConnection'
-        });
-    }
-    
-    // Step 3: Image (if custom)
-    if (state.selections.image === 'custom') {
-        steps.push({
-            title: 'Upload Custom Image',
-            description: 'Add your custom image to Device Images',
-            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365DeviceImage'
-        });
-    }
-    
-    // Step 4: Create provisioning policy
-    steps.push({
-        title: 'Create Provisioning Policy',
-        description: 'Configure and create your Cloud PC provisioning policy',
-        link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365ProvisionPolicy'
-    });
-    
-    // Step 5: User settings
-    steps.push({
-        title: 'Configure User Settings',
-        description: 'Set local admin rights, restore points, and other user settings',
-        link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365UserSettings'
-    });
-    
-    // Step 6: App deployment (if Intune)
-    if (state.selections.apps === 'intune' || state.selections.apps === 'intune-image') {
-        steps.push({
-            title: 'Configure App Deployment',
-            description: 'Package and assign apps in Intune',
-            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/AppsMenu/~/windowsApps'
-        });
-    }
-    
-    // Step 7: Update management
-    if (state.selections.updates === 'autopatch') {
-        steps.push({
-            title: 'Enable Windows Autopatch',
-            description: 'Configure Autopatch for automated update management',
-            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/windowsAutopatch'
-        });
-    } else if (state.selections.updates === 'wufb') {
-        steps.push({
-            title: 'Configure Update Rings',
-            description: 'Create Windows Update for Business policies',
-            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/windowsUpdateRings'
-        });
-    }
-    
-    container.innerHTML = steps.map((step, index) => `
-        <div class="next-step-item">
-            <div class="step-number">${index + 1}</div>
-            <div class="step-content">
-                <div class="step-title">${step.title}</div>
-                <div class="step-description">${step.description}</div>
-            </div>
-            <a href="${step.link}" target="_blank" class="step-link">
-                <i class="fas fa-external-link-alt"></i>
-            </a>
-        </div>
-    `).join('');
-}
+// Legacy function stubs - removed to simplify summary
+function generateConfigSummary() {}
+function generateNextSteps() {}
 
 // Toggle collapsible section
 function toggleSection(sectionId) {
@@ -809,59 +865,163 @@ function toggleSection(sectionId) {
 }
 
 // Legacy function stubs for compatibility
-function generateChecklist() {
-    // Removed - functionality replaced by generateNextSteps
-}
+function generateChecklist() {}
+function generateTimeline() {}
+function generateRequiredUrls() {}
+function generateLicensingRequirements() {}
+function generateProvisioningPolicyCode() {}
 
-function generateTimeline() {
-    // Removed - functionality replaced by executive summary
-}
-
-function generateRequiredUrls() {
-    // Removed - simplified summary page
-}
-
-function generateLicensingRequirements() {
-    // Removed - info included in executive summary
-}
-
-// Export summary as text/markdown
+// Export deployment plan as markdown
 function exportSummary() {
+    const license = state.selections.license;
+    const identity = state.selections.identity;
+    const network = state.selections.network;
+    const image = state.selections.image;
+    const updates = state.selections.updates;
+    const apps = state.selections.apps;
+    const data = state.selections.data;
+    
     const licenseNames = {
         'enterprise': 'Windows 365 Enterprise',
         'business': 'Windows 365 Business',
         'frontline': 'Windows 365 Frontline'
     };
     
-    const identityNames = {
-        'entra': 'Microsoft Entra ID Join',
-        'hybrid': 'Hybrid Entra ID Join'
-    };
+    // Determine complexity
+    let complexity = 'Low';
+    let timeline = '3-5 business days';
+    if (network === 'anc' || identity === 'hybrid' || image === 'custom') {
+        complexity = 'Medium';
+        timeline = '1-2 weeks';
+    }
+    if (network === 'anc' && identity === 'hybrid') {
+        complexity = 'High';
+        timeline = '2-4 weeks';
+    }
     
-    const networkNames = {
-        'microsoft-hosted': 'Microsoft Hosted Network',
-        'anc': 'Azure Network Connection'
-    };
+    const generatedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     
-    const imageNames = {
-        'gallery': 'Gallery Image',
-        'custom': 'Custom Image'
-    };
+    let content = `# Windows 365 Deployment Plan\n\n`;
+    content += `**Generated:** ${generatedDate}\n\n`;
+    content += `---\n\n`;
     
-    let content = `# Windows 365 Deployment Plan\n`;
-    content += `Generated: ${new Date().toLocaleDateString()}\n\n`;
-    content += `## Configuration Summary\n\n`;
-    content += `- **License:** ${licenseNames[state.selections.license]}\n`;
-    content += `- **Identity:** ${identityNames[state.selections.identity]}\n`;
-    content += `- **Network:** ${networkNames[state.selections.network]}\n`;
-    content += `- **Image:** ${imageNames[state.selections.image]}\n\n`;
+    content += `## Overview\n\n`;
+    content += `This document outlines the deployment plan for Windows 365 Cloud PCs.\n\n`;
+    content += `| Metric | Value |\n`;
+    content += `|--------|-------|\n`;
+    content += `| Complexity | ${complexity} |\n`;
+    content += `| Estimated Timeline | ${timeline} |\n\n`;
     
-    content += `\n## Next Steps\n\n`;
-    document.querySelectorAll('#nextSteps .next-step-item').forEach((item, index) => {
-        const title = item.querySelector('.step-title').textContent;
-        const desc = item.querySelector('.step-description').textContent;
-        content += `${index + 1}. **${title}** - ${desc}\n`;
-    });
+    content += `---\n\n`;
+    content += `## 1. Licensing\n\n`;
+    content += `**Selected:** ${licenseNames[license]}\n\n`;
+    if (license === 'enterprise') {
+        content += `Windows 365 Enterprise provides full management capabilities through Microsoft Intune, supports both Microsoft Hosted Network and Azure Network Connection options, and enables custom image deployment.\n\n`;
+        content += `**Prerequisites:** Windows E3/E5 license, Microsoft Intune license, Microsoft Entra ID P1 (typically included in Microsoft 365 E3/E5).\n\n`;
+    } else if (license === 'frontline') {
+        content += `Windows 365 Frontline is a cost-effective option for shift workers and part-time employees who share Cloud PCs on a rotating basis.\n\n`;
+        content += `**Prerequisites:** Windows E3/E5 license, Microsoft Intune license, Microsoft Entra ID P1, Frontline-specific license assignment.\n\n`;
+    } else {
+        content += `Windows 365 Business is a simplified licensing model ideal for smaller organisations, including Entra ID and basic Intune capabilities.\n\n`;
+        content += `**Limitations:** Maximum 300 users, Microsoft Hosted Network only, no custom images, limited management features.\n\n`;
+    }
+    
+    content += `---\n\n`;
+    content += `## 2. Identity & Directory Services\n\n`;
+    content += `**Selected:** ${identity === 'entra' ? 'Microsoft Entra ID Join (Cloud-Native)' : 'Hybrid Microsoft Entra ID Join'}\n\n`;
+    if (identity === 'entra') {
+        content += `Cloud-native identity approach that eliminates dependency on on-premises Active Directory. Cloud PCs are joined directly to Microsoft Entra ID.\n\n`;
+        content += `**Benefits:**\n`;
+        content += `- No line-of-sight to domain controllers required\n`;
+        content += `- Simplified deployment with Microsoft Hosted Network\n`;
+        content += `- Single Sign-On to Microsoft 365 and Entra ID-integrated applications\n`;
+        content += `- Modern authentication with passwordless options\n\n`;
+        content += `**On-premises resource access:** Entra ID Kerberos enables SSO to on-premises file shares without Hybrid Join.\n\n`;
+    } else {
+        content += `Cloud PCs are joined to both on-premises Active Directory and Microsoft Entra ID.\n\n`;
+        content += `**Requirements:**\n`;
+        content += `- Azure Network Connection (ANC) is mandatory\n`;
+        content += `- Direct line-of-sight from Cloud PCs to Domain Controllers\n`;
+        content += `- Entra Connect configured with device writeback enabled\n`;
+        content += `- Network connectivity via VPN Gateway or ExpressRoute\n\n`;
+    }
+    
+    content += `---\n\n`;
+    content += `## 3. Network Configuration\n\n`;
+    content += `**Selected:** ${network === 'microsoft-hosted' ? 'Microsoft Hosted Network' : 'Azure Network Connection (ANC)'}\n\n`;
+    if (network === 'microsoft-hosted') {
+        content += `Microsoft manages all network infrastructure. No Azure subscription or virtual network configuration required.\n\n`;
+        content += `**Benefits:**\n`;
+        content += `- Zero network infrastructure to deploy or maintain\n`;
+        content += `- Automatic regional optimisation\n`;
+        content += `- No Azure networking costs\n`;
+        content += `- Fastest path to deployment\n\n`;
+    } else {
+        content += `Cloud PCs are provisioned within your Azure Virtual Network.\n\n`;
+        content += `**Requirements:**\n`;
+        content += `- Azure subscription with appropriate permissions\n`;
+        content += `- Azure Virtual Network with dedicated subnet (/26 minimum)\n`;
+        content += `- Network connectivity to required on-premises resources\n`;
+        if (identity === 'hybrid') {
+            content += `- VPN Gateway or ExpressRoute for Domain Controller access\n`;
+        }
+        content += `\n`;
+    }
+    
+    content += `---\n\n`;
+    content += `## 4. Image Strategy\n\n`;
+    content += `**Selected:** ${image === 'gallery' ? 'Microsoft Gallery Images' : 'Custom Images'}\n\n`;
+    if (image === 'gallery') {
+        content += `Pre-built, optimised images maintained by Microsoft. Always current with latest security updates.\n\n`;
+        content += `**Application deployment:** Applications should be deployed via Microsoft Intune rather than baked into images.\n\n`;
+    } else {
+        content += `Organisation-specific images with pre-installed applications, stored in Azure Compute Gallery.\n\n`;
+        content += `**Requirements:** Azure subscription with Compute Gallery, Generation 2 VM image, Windows 10/11 Enterprise, Sysprep generalised.\n\n`;
+        content += `**Maintenance:** Custom images require regular updates. Recommend monthly refresh cycle.\n\n`;
+    }
+    
+    content += `---\n\n`;
+    content += `## 5. Update Management\n\n`;
+    content += `**Selected:** ${updates === 'autopatch' ? 'Windows Autopatch' : updates === 'wufb' ? 'Windows Update for Business' : 'WSUS / Configuration Manager'}\n\n`;
+    if (updates === 'autopatch') {
+        content += `Fully managed update service. Microsoft handles update deployment, ring progression, and rollback.\n\n`;
+        content += `**Coverage:** Windows quality updates, feature updates, Microsoft 365 Apps, Edge, and Teams updates.\n\n`;
+    } else if (updates === 'wufb') {
+        content += `Cloud-based update management with customisable deployment rings and deferral periods.\n\n`;
+        content += `**Configuration:** Define update rings in Intune, set deferral periods, configure maintenance windows.\n\n`;
+    } else {
+        content += `Traditional update management using existing on-premises infrastructure.\n\n`;
+        content += `**Requirements:** Azure Network Connection for WSUS server access, ConfigMgr co-management if applicable.\n\n`;
+    }
+    
+    content += `---\n\n`;
+    content += `## 6. Application Delivery\n\n`;
+    content += `**Selected:** ${apps === 'intune' ? 'Microsoft Intune' : apps === 'intune-image' ? 'Intune + Custom Image' : 'Configuration Manager / Co-management'}\n\n`;
+    if (apps === 'intune') {
+        content += `Cloud-native application management with support for multiple application types.\n\n`;
+        content += `**Supported types:** Microsoft 365 Apps, Win32 applications, Microsoft Store apps, LOB applications, Web links.\n\n`;
+    } else if (apps === 'intune-image') {
+        content += `Large or complex applications pre-installed in custom image; remaining applications deployed via Intune.\n\n`;
+    } else {
+        content += `Continue using existing ConfigMgr infrastructure through co-management.\n\n`;
+        content += `**Requirements:** Azure Network Connection, Co-management enabled, Cloud Management Gateway recommended.\n\n`;
+    }
+    
+    content += `---\n\n`;
+    content += `## 7. User Data & Storage\n\n`;
+    content += `**Selected:** ${data === 'onedrive' ? 'OneDrive for Business' : data === 'hybrid-storage' ? 'OneDrive + Network File Shares' : 'Traditional File Shares'}\n\n`;
+    if (data === 'onedrive') {
+        content += `Cloud-native storage with automatic sync, backup, and cross-device access.\n\n`;
+        content += `**Key features:** Known Folder Move, Files On-Demand, version history, ransomware recovery.\n\n`;
+    } else if (data === 'hybrid-storage') {
+        content += `OneDrive for personal files; traditional file shares for shared departmental data.\n\n`;
+    } else {
+        content += `Continue using existing file server infrastructure.\n\n`;
+        content += `**Requirements:** Azure Network Connection for file server access.\n\n`;
+    }
+    
+    content += `---\n\n`;
+    content += `*This deployment plan was generated using the Windows 365 Deployment Guide.*\n`;
     
     // Create download
     const blob = new Blob([content], { type: 'text/markdown' });
@@ -1045,168 +1205,6 @@ function updateArchitectureDiagram() {
     } catch (e) {
         console.log('Mermaid render:', e);
     }
-}
-
-// Generate Provisioning Policy PowerShell Code
-function generateProvisioningPolicyCode() {
-    const powershellContent = document.getElementById('powershellContent');
-    const graphContent = document.getElementById('graphContent');
-    
-    const identity = state.selections.identity;
-    const network = state.selections.network;
-    const image = state.selections.image;
-    const license = state.selections.license;
-    
-    // Determine domain join type
-    const domainJoinType = identity === 'hybrid' ? 'hybridAzureADJoin' : 'azureADJoin';
-    
-    // Determine provisioning type
-    let provisioningType = 'dedicated';
-    if (license === 'frontline') {
-        provisioningType = 'shared'; // or 'dedicated' based on selection
-    }
-    
-    // PowerShell Script
-    const powershellCode = `# Windows 365 Provisioning Policy Creation Script
-# Generated by W365 Deployment Guide - ${new Date().toLocaleDateString()}
-# 
-# Prerequisites:
-# - Install-Module Microsoft.Graph -Scope CurrentUser
-# - Connect-MgGraph -Scopes "CloudPC.ReadWrite.All"
-
-#Requires -Modules Microsoft.Graph.Beta.DeviceManagement.Actions
-
-# Connect to Microsoft Graph
-Connect-MgGraph -Scopes "CloudPC.ReadWrite.All"
-
-# Define provisioning policy parameters
-$policyName = "W365-Policy-$(Get-Date -Format 'yyyyMMdd')"
-$policyDescription = "Windows 365 provisioning policy created via deployment guide"
-
-${network === 'anc' ? `# Azure Network Connection ID - Replace with your actual ANC ID
-# Get available ANCs: Get-MgBetaDeviceManagementVirtualEndpointOnPremisesConnection
-$ancId = "<YOUR-ANC-ID-HERE>"
-` : `# Using Microsoft Hosted Network
-$geography = "US"  # Change to your preferred geography: US, EU, APAC, etc.
-$regionGroup = "US East"  # Optional: specify region group or leave for auto-selection
-`}
-# Domain Join Configuration
-$domainJoinConfig = @{
-    DomainJoinType = "${domainJoinType}"
-${network === 'anc' ? `    OnPremisesConnectionId = $ancId` : `    RegionGroup = $regionGroup
-    RegionName = ""  # Leave empty for automatic selection (recommended)`}
-}
-
-# Image Configuration
-${image === 'custom' ? `# Custom Image - Replace with your image ID
-# Get available images: Get-MgBetaDeviceManagementVirtualEndpointDeviceImage
-$imageId = "<YOUR-CUSTOM-IMAGE-ID>"
-$imageType = "custom"
-$imageDisplayName = "Custom Windows 11 Image"` : `# Gallery Image - Windows 11 Enterprise + Microsoft 365 Apps
-$imageId = "MicrosoftWindowsDesktop_windows-ent-cpc_win11-23h2-ent-cpc-m365"
-$imageType = "gallery"
-$imageDisplayName = "Windows 11 Enterprise + Microsoft 365 Apps"`}
-
-# Windows Settings
-$windowsSettings = @{
-    Locale = "en-US"  # Change to your preferred locale
-}
-
-# Create the provisioning policy body
-$policyBody = @{
-    "@odata.type" = "#microsoft.graph.cloudPcProvisioningPolicy"
-    displayName = $policyName
-    description = $policyDescription
-    domainJoinConfigurations = @(
-        $domainJoinConfig
-    )
-    imageId = $imageId
-    imageType = $imageType
-    imageDisplayName = $imageDisplayName
-    enableSingleSignOn = $${sso ? 'true' : 'false'}
-    windowsSetting = $windowsSettings
-    provisioningType = "${provisioningType}"
-${network === 'microsoft-hosted' ? `    microsoftManagedDesktop = @{
-        managedType = "notManaged"
-        profile = $null
-    }` : ''}
-}
-
-# Create the provisioning policy
-try {
-    $policy = New-MgBetaDeviceManagementVirtualEndpointProvisioningPolicy -BodyParameter $policyBody
-    Write-Host "✓ Provisioning policy created successfully!" -ForegroundColor Green
-    Write-Host "  Policy ID: $($policy.Id)"
-    Write-Host "  Policy Name: $($policy.DisplayName)"
-} catch {
-    Write-Error "Failed to create provisioning policy: $_"
-}
-
-# Assign the policy to a group (uncomment and modify as needed)
-<#
-$groupId = "<YOUR-ENTRA-GROUP-ID>"
-$assignment = @{
-    target = @{
-        "@odata.type" = "#microsoft.graph.cloudPcManagementGroupAssignmentTarget"
-        groupId = $groupId
-    }
-}
-New-MgBetaDeviceManagementVirtualEndpointProvisioningPolicyAssignment -CloudPcProvisioningPolicyId $policy.Id -BodyParameter $assignment
-Write-Host "✓ Policy assigned to group: $groupId"
-#>
-
-# Disconnect from Graph (optional)
-# Disconnect-MgGraph`;
-
-    // Graph API JSON
-    const graphJson = {
-        "@odata.type": "#microsoft.graph.cloudPcProvisioningPolicy",
-        displayName: `W365-Policy-${new Date().toISOString().split('T')[0]}`,
-        description: "Windows 365 provisioning policy",
-        domainJoinConfigurations: [
-            {
-                domainJoinType: domainJoinType,
-                ...(network === 'anc' 
-                    ? { onPremisesConnectionId: "<YOUR-ANC-ID>" }
-                    : { regionGroup: "US East", regionName: "" }
-                )
-            }
-        ],
-        imageId: image === 'custom' 
-            ? "<YOUR-CUSTOM-IMAGE-ID>" 
-            : "MicrosoftWindowsDesktop_windows-ent-cpc_win11-23h2-ent-cpc-m365",
-        imageType: image === 'custom' ? "custom" : "gallery",
-        imageDisplayName: image === 'custom' 
-            ? "Custom Windows 11 Image" 
-            : "Windows 11 Enterprise + Microsoft 365 Apps",
-        enableSingleSignOn: sso,
-        windowsSetting: {
-            locale: "en-US"
-        },
-        provisioningType: provisioningType
-    };
-
-    const graphCode = `// Graph API - Create Provisioning Policy
-// POST https://graph.microsoft.com/v1.0/deviceManagement/virtualEndpoint/provisioningPolicies
-// 
-// Required Permission: CloudPC.ReadWrite.All
-// Content-Type: application/json
-
-${JSON.stringify(graphJson, null, 2)}
-
-// -------------------------------------------
-// To assign the policy to a group, use:
-// POST https://graph.microsoft.com/v1.0/deviceManagement/virtualEndpoint/provisioningPolicies/{policy-id}/assignments
-// 
-// {
-//   "target": {
-//     "@odata.type": "#microsoft.graph.cloudPcManagementGroupAssignmentTarget",
-//     "groupId": "<YOUR-ENTRA-GROUP-ID>"
-//   }
-// }`;
-
-    powershellContent.textContent = powershellCode;
-    graphContent.textContent = graphCode;
 }
 
 // Generate Required URLs and Endpoints
