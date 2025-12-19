@@ -873,87 +873,183 @@ function generateProvisioningPolicyCode() {}
 
 // Export deployment plan to PDF
 function exportToPDF() {
+    // Get the summary container content
+    const execSummaryHtml = document.getElementById('execSummary').innerHTML;
+    const diagramSvg = document.getElementById('summaryDiagram').innerHTML;
+    
     // Create a container for the PDF content
     const pdfContent = document.createElement('div');
-    pdfContent.style.padding = '20px';
-    pdfContent.style.fontFamily = 'Segoe UI, Arial, sans-serif';
-    pdfContent.style.color = '#333';
-    pdfContent.style.maxWidth = '800px';
-    pdfContent.style.margin = '0 auto';
-    
-    // Clone the executive summary content
-    const execSummary = document.getElementById('execSummary').cloneNode(true);
-    
-    // Clone the architecture diagram
-    const diagramContainer = document.getElementById('summaryDiagram').cloneNode(true);
-    
-    // Build the PDF content
+    pdfContent.id = 'pdf-export-content';
     pdfContent.innerHTML = `
-        <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #0078d4; padding-bottom: 20px;">
-            <h1 style="color: #0078d4; margin: 0; font-size: 24px;">Windows 365 Deployment Plan</h1>
+        <style>
+            #pdf-export-content {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                color: #333;
+                padding: 30px;
+                background: white;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            #pdf-export-content .pdf-header {
+                text-align: center;
+                margin-bottom: 30px;
+                border-bottom: 3px solid #0078d4;
+                padding-bottom: 20px;
+            }
+            #pdf-export-content .pdf-header h1 {
+                color: #0078d4;
+                margin: 0;
+                font-size: 26px;
+                font-weight: 600;
+            }
+            #pdf-export-content .plan-section {
+                margin-bottom: 25px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid #eee;
+            }
+            #pdf-export-content .plan-section h5 {
+                color: #0078d4;
+                font-size: 14px;
+                margin-bottom: 12px;
+                font-weight: 600;
+            }
+            #pdf-export-content .decision-box {
+                background: #f5f5f5;
+                padding: 15px;
+                border-radius: 6px;
+                border-left: 4px solid #0078d4;
+            }
+            #pdf-export-content .decision-choice {
+                font-weight: 600;
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #ddd;
+            }
+            #pdf-export-content .decision-rationale {
+                font-size: 12px;
+                line-height: 1.6;
+            }
+            #pdf-export-content .decision-rationale ul {
+                margin: 8px 0 8px 20px;
+                padding: 0;
+            }
+            #pdf-export-content .decision-rationale li {
+                margin-bottom: 4px;
+            }
+            #pdf-export-content .badge-recommended {
+                background: #107c10;
+                color: white;
+                font-size: 10px;
+                padding: 2px 8px;
+                border-radius: 10px;
+                margin-left: 10px;
+            }
+            #pdf-export-content .plan-metrics {
+                display: flex;
+                gap: 30px;
+                background: #f0f0f0;
+                padding: 15px;
+                border-radius: 6px;
+                margin-top: 15px;
+            }
+            #pdf-export-content .metric {
+                display: flex;
+                flex-direction: column;
+            }
+            #pdf-export-content .metric-label {
+                font-size: 10px;
+                color: #666;
+                text-transform: uppercase;
+            }
+            #pdf-export-content .metric-value {
+                font-size: 14px;
+                font-weight: 600;
+            }
+            #pdf-export-content .plan-meta {
+                text-align: right;
+                font-size: 11px;
+                color: #666;
+                margin-bottom: 15px;
+            }
+            #pdf-export-content .arch-section {
+                margin-top: 30px;
+                page-break-before: always;
+            }
+            #pdf-export-content .arch-section h2 {
+                color: #0078d4;
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+            #pdf-export-content .diagram-container {
+                background: #fafafa;
+                padding: 20px;
+                border-radius: 8px;
+                text-align: center;
+            }
+            #pdf-export-content .diagram-container svg {
+                max-width: 100%;
+                height: auto;
+            }
+            #pdf-export-content .pdf-footer {
+                margin-top: 40px;
+                padding-top: 15px;
+                border-top: 1px solid #ddd;
+                text-align: center;
+                font-size: 11px;
+                color: #888;
+            }
+        </style>
+        
+        <div class="pdf-header">
+            <h1>Windows 365 Deployment Plan</h1>
         </div>
-    `;
-    
-    // Add executive summary
-    const summarySection = document.createElement('div');
-    summarySection.appendChild(execSummary);
-    pdfContent.appendChild(summarySection);
-    
-    // Add architecture section header
-    const archHeader = document.createElement('div');
-    archHeader.innerHTML = `
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
-            <h2 style="color: #0078d4; font-size: 18px; margin-bottom: 15px;">
-                <span style="margin-right: 10px;">📊</span> Architecture Overview
-            </h2>
+        
+        <div class="exec-summary">
+            ${execSummaryHtml}
         </div>
-    `;
-    pdfContent.appendChild(archHeader);
-    
-    // Add diagram
-    const diagramSection = document.createElement('div');
-    diagramSection.style.background = '#f9f9f9';
-    diagramSection.style.padding = '20px';
-    diagramSection.style.borderRadius = '8px';
-    diagramSection.style.marginTop = '10px';
-    diagramSection.appendChild(diagramContainer);
-    pdfContent.appendChild(diagramSection);
-    
-    // Add footer
-    const footer = document.createElement('div');
-    footer.innerHTML = `
-        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; font-size: 12px;">
+        
+        <div class="arch-section">
+            <h2>Architecture Overview</h2>
+            <div class="diagram-container">
+                ${diagramSvg}
+            </div>
+        </div>
+        
+        <div class="pdf-footer">
             Generated using the Windows 365 Deployment Guide
         </div>
     `;
-    pdfContent.appendChild(footer);
     
-    // Temporarily add to document for rendering
-    pdfContent.style.position = 'absolute';
-    pdfContent.style.left = '-9999px';
+    // Add to document body (visible but will be removed after)
+    pdfContent.style.position = 'fixed';
+    pdfContent.style.top = '0';
+    pdfContent.style.left = '0';
+    pdfContent.style.width = '210mm';
+    pdfContent.style.background = 'white';
+    pdfContent.style.zIndex = '99999';
     document.body.appendChild(pdfContent);
     
     // PDF options
     const opt = {
-        margin: [10, 10, 10, 10],
+        margin: 10,
         filename: 'W365-Deployment-Plan.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
             scale: 2,
             useCORS: true,
-            logging: false
+            logging: false,
+            windowWidth: 800
         },
         jsPDF: { 
             unit: 'mm', 
             format: 'a4', 
             orientation: 'portrait' 
         },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak: { mode: 'css', before: '.arch-section' }
     };
     
     // Generate PDF
     html2pdf().set(opt).from(pdfContent).save().then(() => {
-        // Clean up
         document.body.removeChild(pdfContent);
     }).catch(err => {
         console.error('PDF generation failed:', err);
