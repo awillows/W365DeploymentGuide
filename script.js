@@ -871,169 +871,103 @@ function generateRequiredUrls() {}
 function generateLicensingRequirements() {}
 function generateProvisioningPolicyCode() {}
 
-// Export deployment plan as markdown
-function exportSummary() {
-    const license = state.selections.license;
-    const identity = state.selections.identity;
-    const network = state.selections.network;
-    const image = state.selections.image;
-    const updates = state.selections.updates;
-    const apps = state.selections.apps;
-    const data = state.selections.data;
+// Export deployment plan to PDF
+function exportToPDF() {
+    // Create a container for the PDF content
+    const pdfContent = document.createElement('div');
+    pdfContent.style.padding = '20px';
+    pdfContent.style.fontFamily = 'Segoe UI, Arial, sans-serif';
+    pdfContent.style.color = '#333';
+    pdfContent.style.maxWidth = '800px';
+    pdfContent.style.margin = '0 auto';
     
-    const licenseNames = {
-        'enterprise': 'Windows 365 Enterprise',
-        'business': 'Windows 365 Business',
-        'frontline': 'Windows 365 Frontline'
+    // Clone the executive summary content
+    const execSummary = document.getElementById('execSummary').cloneNode(true);
+    
+    // Clone the architecture diagram
+    const diagramContainer = document.getElementById('summaryDiagram').cloneNode(true);
+    
+    // Build the PDF content
+    pdfContent.innerHTML = `
+        <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #0078d4; padding-bottom: 20px;">
+            <h1 style="color: #0078d4; margin: 0; font-size: 24px;">Windows 365 Deployment Plan</h1>
+        </div>
+    `;
+    
+    // Add executive summary
+    const summarySection = document.createElement('div');
+    summarySection.appendChild(execSummary);
+    pdfContent.appendChild(summarySection);
+    
+    // Add architecture section header
+    const archHeader = document.createElement('div');
+    archHeader.innerHTML = `
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <h2 style="color: #0078d4; font-size: 18px; margin-bottom: 15px;">
+                <span style="margin-right: 10px;">📊</span> Architecture Overview
+            </h2>
+        </div>
+    `;
+    pdfContent.appendChild(archHeader);
+    
+    // Add diagram
+    const diagramSection = document.createElement('div');
+    diagramSection.style.background = '#f9f9f9';
+    diagramSection.style.padding = '20px';
+    diagramSection.style.borderRadius = '8px';
+    diagramSection.style.marginTop = '10px';
+    diagramSection.appendChild(diagramContainer);
+    pdfContent.appendChild(diagramSection);
+    
+    // Add footer
+    const footer = document.createElement('div');
+    footer.innerHTML = `
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; font-size: 12px;">
+            Generated using the Windows 365 Deployment Guide
+        </div>
+    `;
+    pdfContent.appendChild(footer);
+    
+    // Temporarily add to document for rendering
+    pdfContent.style.position = 'absolute';
+    pdfContent.style.left = '-9999px';
+    document.body.appendChild(pdfContent);
+    
+    // PDF options
+    const opt = {
+        margin: [10, 10, 10, 10],
+        filename: 'W365-Deployment-Plan.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            logging: false
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait' 
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
     
-    // Determine complexity
-    let complexity = 'Low';
-    let timeline = '3-5 business days';
-    if (network === 'anc' || identity === 'hybrid' || image === 'custom') {
-        complexity = 'Medium';
-        timeline = '1-2 weeks';
-    }
-    if (network === 'anc' && identity === 'hybrid') {
-        complexity = 'High';
-        timeline = '2-4 weeks';
-    }
-    
-    const generatedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-    
-    let content = `# Windows 365 Deployment Plan\n\n`;
-    content += `**Generated:** ${generatedDate}\n\n`;
-    content += `---\n\n`;
-    
-    content += `## Overview\n\n`;
-    content += `This document outlines the deployment plan for Windows 365 Cloud PCs.\n\n`;
-    content += `| Metric | Value |\n`;
-    content += `|--------|-------|\n`;
-    content += `| Complexity | ${complexity} |\n`;
-    content += `| Estimated Timeline | ${timeline} |\n\n`;
-    
-    content += `---\n\n`;
-    content += `## 1. Licensing\n\n`;
-    content += `**Selected:** ${licenseNames[license]}\n\n`;
-    if (license === 'enterprise') {
-        content += `Windows 365 Enterprise provides full management capabilities through Microsoft Intune, supports both Microsoft Hosted Network and Azure Network Connection options, and enables custom image deployment.\n\n`;
-        content += `**Prerequisites:** Windows E3/E5 license, Microsoft Intune license, Microsoft Entra ID P1 (typically included in Microsoft 365 E3/E5).\n\n`;
-    } else if (license === 'frontline') {
-        content += `Windows 365 Frontline is a cost-effective option for shift workers and part-time employees who share Cloud PCs on a rotating basis.\n\n`;
-        content += `**Prerequisites:** Windows E3/E5 license, Microsoft Intune license, Microsoft Entra ID P1, Frontline-specific license assignment.\n\n`;
-    } else {
-        content += `Windows 365 Business is a simplified licensing model ideal for smaller organisations, including Entra ID and basic Intune capabilities.\n\n`;
-        content += `**Limitations:** Maximum 300 users, Microsoft Hosted Network only, no custom images, limited management features.\n\n`;
-    }
-    
-    content += `---\n\n`;
-    content += `## 2. Identity & Directory Services\n\n`;
-    content += `**Selected:** ${identity === 'entra' ? 'Microsoft Entra ID Join (Cloud-Native)' : 'Hybrid Microsoft Entra ID Join'}\n\n`;
-    if (identity === 'entra') {
-        content += `Cloud-native identity approach that eliminates dependency on on-premises Active Directory. Cloud PCs are joined directly to Microsoft Entra ID.\n\n`;
-        content += `**Benefits:**\n`;
-        content += `- No line-of-sight to domain controllers required\n`;
-        content += `- Simplified deployment with Microsoft Hosted Network\n`;
-        content += `- Single Sign-On to Microsoft 365 and Entra ID-integrated applications\n`;
-        content += `- Modern authentication with passwordless options\n\n`;
-        content += `**On-premises resource access:** Entra ID Kerberos enables SSO to on-premises file shares without Hybrid Join.\n\n`;
-    } else {
-        content += `Cloud PCs are joined to both on-premises Active Directory and Microsoft Entra ID.\n\n`;
-        content += `**Requirements:**\n`;
-        content += `- Azure Network Connection (ANC) is mandatory\n`;
-        content += `- Direct line-of-sight from Cloud PCs to Domain Controllers\n`;
-        content += `- Entra Connect configured with device writeback enabled\n`;
-        content += `- Network connectivity via VPN Gateway or ExpressRoute\n\n`;
-    }
-    
-    content += `---\n\n`;
-    content += `## 3. Network Configuration\n\n`;
-    content += `**Selected:** ${network === 'microsoft-hosted' ? 'Microsoft Hosted Network' : 'Azure Network Connection (ANC)'}\n\n`;
-    if (network === 'microsoft-hosted') {
-        content += `Microsoft manages all network infrastructure. No Azure subscription or virtual network configuration required.\n\n`;
-        content += `**Benefits:**\n`;
-        content += `- Zero network infrastructure to deploy or maintain\n`;
-        content += `- Automatic regional optimisation\n`;
-        content += `- No Azure networking costs\n`;
-        content += `- Fastest path to deployment\n\n`;
-    } else {
-        content += `Cloud PCs are provisioned within your Azure Virtual Network.\n\n`;
-        content += `**Requirements:**\n`;
-        content += `- Azure subscription with appropriate permissions\n`;
-        content += `- Azure Virtual Network with dedicated subnet (/26 minimum)\n`;
-        content += `- Network connectivity to required on-premises resources\n`;
-        if (identity === 'hybrid') {
-            content += `- VPN Gateway or ExpressRoute for Domain Controller access\n`;
-        }
-        content += `\n`;
-    }
-    
-    content += `---\n\n`;
-    content += `## 4. Image Strategy\n\n`;
-    content += `**Selected:** ${image === 'gallery' ? 'Microsoft Gallery Images' : 'Custom Images'}\n\n`;
-    if (image === 'gallery') {
-        content += `Pre-built, optimised images maintained by Microsoft. Always current with latest security updates.\n\n`;
-        content += `**Application deployment:** Applications should be deployed via Microsoft Intune rather than baked into images.\n\n`;
-    } else {
-        content += `Organisation-specific images with pre-installed applications, stored in Azure Compute Gallery.\n\n`;
-        content += `**Requirements:** Azure subscription with Compute Gallery, Generation 2 VM image, Windows 10/11 Enterprise, Sysprep generalised.\n\n`;
-        content += `**Maintenance:** Custom images require regular updates. Recommend monthly refresh cycle.\n\n`;
-    }
-    
-    content += `---\n\n`;
-    content += `## 5. Update Management\n\n`;
-    content += `**Selected:** ${updates === 'autopatch' ? 'Windows Autopatch' : updates === 'wufb' ? 'Windows Update for Business' : 'WSUS / Configuration Manager'}\n\n`;
-    if (updates === 'autopatch') {
-        content += `Fully managed update service. Microsoft handles update deployment, ring progression, and rollback.\n\n`;
-        content += `**Coverage:** Windows quality updates, feature updates, Microsoft 365 Apps, Edge, and Teams updates.\n\n`;
-    } else if (updates === 'wufb') {
-        content += `Cloud-based update management with customisable deployment rings and deferral periods.\n\n`;
-        content += `**Configuration:** Define update rings in Intune, set deferral periods, configure maintenance windows.\n\n`;
-    } else {
-        content += `Traditional update management using existing on-premises infrastructure.\n\n`;
-        content += `**Requirements:** Azure Network Connection for WSUS server access, ConfigMgr co-management if applicable.\n\n`;
-    }
-    
-    content += `---\n\n`;
-    content += `## 6. Application Delivery\n\n`;
-    content += `**Selected:** ${apps === 'intune' ? 'Microsoft Intune' : apps === 'intune-image' ? 'Intune + Custom Image' : 'Configuration Manager / Co-management'}\n\n`;
-    if (apps === 'intune') {
-        content += `Cloud-native application management with support for multiple application types.\n\n`;
-        content += `**Supported types:** Microsoft 365 Apps, Win32 applications, Microsoft Store apps, LOB applications, Web links.\n\n`;
-    } else if (apps === 'intune-image') {
-        content += `Large or complex applications pre-installed in custom image; remaining applications deployed via Intune.\n\n`;
-    } else {
-        content += `Continue using existing ConfigMgr infrastructure through co-management.\n\n`;
-        content += `**Requirements:** Azure Network Connection, Co-management enabled, Cloud Management Gateway recommended.\n\n`;
-    }
-    
-    content += `---\n\n`;
-    content += `## 7. User Data & Storage\n\n`;
-    content += `**Selected:** ${data === 'onedrive' ? 'OneDrive for Business' : data === 'hybrid-storage' ? 'OneDrive + Network File Shares' : 'Traditional File Shares'}\n\n`;
-    if (data === 'onedrive') {
-        content += `Cloud-native storage with automatic sync, backup, and cross-device access.\n\n`;
-        content += `**Key features:** Known Folder Move, Files On-Demand, version history, ransomware recovery.\n\n`;
-    } else if (data === 'hybrid-storage') {
-        content += `OneDrive for personal files; traditional file shares for shared departmental data.\n\n`;
-    } else {
-        content += `Continue using existing file server infrastructure.\n\n`;
-        content += `**Requirements:** Azure Network Connection for file server access.\n\n`;
-    }
-    
-    content += `---\n\n`;
-    content += `*This deployment plan was generated using the Windows 365 Deployment Guide.*\n`;
-    
-    // Create download
-    const blob = new Blob([content], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'W365-Deployment-Plan.md';
-    a.click();
-    URL.revokeObjectURL(url);
+    // Generate PDF
+    html2pdf().set(opt).from(pdfContent).save().then(() => {
+        // Clean up
+        document.body.removeChild(pdfContent);
+    }).catch(err => {
+        console.error('PDF generation failed:', err);
+        document.body.removeChild(pdfContent);
+        alert('Failed to generate PDF. Please try again.');
+    });
 }
 
-// Print summary
+// Legacy export function (kept for compatibility)
+function exportSummary() {
+    exportToPDF();
+}
+
+// Legacy print function (kept for compatibility)
 function printSummary() {
     window.print();
 }

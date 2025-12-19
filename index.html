@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -1303,11 +1304,8 @@ graph LR
                     </div>
 
                     <div class="export-buttons">
-                        <button class="btn btn-primary" onclick="exportFullPackage()">
-                            <i class="fas fa-file-archive"></i> Export Deployment Plan
-                        </button>
-                        <button class="btn btn-secondary" onclick="printSummary()">
-                            <i class="fas fa-print"></i> Print
+                        <button class="btn btn-primary" onclick="exportToPDF()">
+                            <i class="fas fa-file-pdf"></i> Export Deployment Plan
                         </button>
                     </div>
                 </div>
