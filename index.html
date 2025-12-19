@@ -70,6 +70,140 @@
         </div>
     </section>
 
+    <!-- Comparison Section - Traditional vs Modern -->
+    <section id="comparison" class="section section-alt">
+        <div class="container">
+            <h2>Streamlined Windows in the Cloud</h2>
+            <p class="section-subtitle">Moving from traditional VDI to Windows 365</p>
+            
+            <div class="comparison-overview">
+                <div class="comparison-table-container">
+                    <table class="modern-comparison-table">
+                        <thead>
+                            <tr>
+                                <th class="approach-header"></th>
+                                <th>Identity</th>
+                                <th>Networking</th>
+                                <th>Images</th>
+                                <th>Operating System</th>
+                                <th>Updates</th>
+                                <th>App Deployment</th>
+                                <th>User Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="traditional-row">
+                                <td class="approach-label">
+                                    <span class="approach-tag traditional">Traditional & Complex</span>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell">
+                                        <i class="fas fa-network-wired"></i>
+                                        <span>Hybrid Join</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell">
+                                        <i class="fas fa-server"></i>
+                                        <span>Azure Network Connection</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell">
+                                        <i class="fas fa-hdd"></i>
+                                        <span>Custom Images</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell">
+                                        <i class="fab fa-windows"></i>
+                                        <span>Windows 10</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell">
+                                        <i class="fas fa-sync"></i>
+                                        <span>Legacy Update Delivery</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell">
+                                        <i class="fas fa-box"></i>
+                                        <span>Legacy Methods</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell">
+                                        <i class="fas fa-folder"></i>
+                                        <span>File Shares</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="modern-row">
+                                <td class="approach-label">
+                                    <span class="approach-tag modern">Simplified & Streamlined</span>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell recommended">
+                                        <i class="fas fa-cloud"></i>
+                                        <span>Entra Joined</span>
+                                        <i class="fas fa-star recommend-star"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell recommended">
+                                        <i class="fab fa-microsoft"></i>
+                                        <span>Microsoft Hosted Network</span>
+                                        <i class="fas fa-star recommend-star"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell recommended">
+                                        <i class="fas fa-images"></i>
+                                        <span>Gallery Images</span>
+                                        <i class="fas fa-star recommend-star"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell recommended">
+                                        <i class="fab fa-windows"></i>
+                                        <span>Windows 11</span>
+                                        <i class="fas fa-star recommend-star"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell recommended">
+                                        <i class="fas fa-magic"></i>
+                                        <span>Autopatch</span>
+                                        <i class="fas fa-star recommend-star"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell recommended">
+                                        <i class="fas fa-cogs"></i>
+                                        <span>Intune Management</span>
+                                        <i class="fas fa-star recommend-star"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="comparison-cell recommended">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Cloud Data</span>
+                                        <i class="fas fa-star recommend-star"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="comparison-cta">
+                    <p><i class="fas fa-arrow-down"></i> Use the wizard below to configure each area and generate your deployment plan</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Wizard Section -->
     <section id="wizard" class="section section-alt">
         <div class="container">
@@ -86,8 +220,11 @@
                     <span class="step" data-step="2">Identity</span>
                     <span class="step" data-step="3">Network</span>
                     <span class="step" data-step="4">Image</span>
-                    <span class="step" data-step="5">Security</span>
-                    <span class="step" data-step="6">Summary</span>
+                    <span class="step" data-step="5">Updates</span>
+                    <span class="step" data-step="6">Apps</span>
+                    <span class="step" data-step="7">Data</span>
+                    <span class="step" data-step="8">Security</span>
+                    <span class="step" data-step="9">Summary</span>
                 </div>
             </div>
 
@@ -581,8 +718,467 @@ graph LR
                     </div>
                 </div>
 
-                <!-- Step 5: Security -->
+                <!-- Step 5: Updates -->
                 <div class="wizard-step" id="step5">
+                    <h3><i class="fas fa-sync-alt"></i> Update Management</h3>
+                    <p>How will Windows updates be managed on your Cloud PCs?</p>
+                    
+                    <div class="step-layout">
+                        <div class="step-left">
+                            <div class="options-grid">
+                                <div class="option-card" data-value="autopatch">
+                                    <div class="option-header">
+                                        <h4>Windows Autopatch</h4>
+                                        <span class="badge badge-recommended">Recommended</span>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Fully automated updates</li>
+                                        <li><i class="fas fa-check"></i> Microsoft managed rings</li>
+                                        <li><i class="fas fa-check"></i> Automatic rollback</li>
+                                        <li><i class="fas fa-check"></i> Quality & feature updates</li>
+                                        <li><i class="fas fa-check"></i> Microsoft 365 Apps updates</li>
+                                        <li><i class="fas fa-check"></i> Driver updates</li>
+                                    </ul>
+                                    <p class="option-note">Best for: Hands-off update management</p>
+                                </div>
+                                
+                                <div class="option-card" data-value="wufb">
+                                    <div class="option-header">
+                                        <h4>Windows Update for Business</h4>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Granular deferral controls</li>
+                                        <li><i class="fas fa-check"></i> Custom update rings</li>
+                                        <li><i class="fas fa-check"></i> Deadline enforcement</li>
+                                        <li><i class="fas fa-check"></i> Intune policy-based</li>
+                                        <li><i class="fas fa-times"></i> More management overhead</li>
+                                        <li><i class="fas fa-times"></i> Manual monitoring required</li>
+                                    </ul>
+                                    <p class="option-note">Best for: Custom update schedules</p>
+                                </div>
+                                
+                                <div class="option-card" data-value="wsus">
+                                    <div class="option-header">
+                                        <h4>WSUS / Legacy</h4>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Full approval control</li>
+                                        <li><i class="fas fa-check"></i> On-premises infrastructure</li>
+                                        <li><i class="fas fa-times"></i> Significant management overhead</li>
+                                        <li><i class="fas fa-times"></i> Requires ANC</li>
+                                        <li><i class="fas fa-times"></i> Legacy approach</li>
+                                        <li><i class="fas fa-times"></i> Not recommended for Cloud PCs</li>
+                                    </ul>
+                                    <p class="option-note">Best for: Existing WSUS infrastructure (migration path)</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-right">
+                            <div class="considerations-panel expanded" id="updates-considerations-panel">
+                                <div class="considerations-header">
+                                    <h4><i class="fas fa-lightbulb"></i> Key Considerations</h4>
+                                </div>
+                                
+                                <div class="considerations-content active" id="updates-default">
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-hand-pointer"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Select an update strategy</h5>
+                                            <p>Choose how Windows updates will be managed on your Cloud PCs.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="updates-autopatch">
+                                    <div class="consideration-item highlight recommended">
+                                        <div class="consideration-icon"><i class="fas fa-star"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Recommended Approach</h5>
+                                            <p>Windows Autopatch provides <strong>hands-off, enterprise-grade update management</strong>. Microsoft handles the complexity.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item highlight">
+                                        <div class="consideration-icon"><i class="fas fa-magic"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>What Autopatch manages</h5>
+                                            <ul>
+                                                <li>Windows quality updates (monthly)</li>
+                                                <li>Windows feature updates (annual)</li>
+                                                <li>Microsoft 365 Apps updates</li>
+                                                <li>Microsoft Edge updates</li>
+                                                <li>Microsoft Teams updates</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-layer-group"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Deployment rings</h5>
+                                            <p>Autopatch automatically creates deployment rings (Test → First → Fast → Broad) to safely roll out updates with automatic rollback on issues.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-check-circle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Licensing</h5>
+                                            <p>Included with Windows E3/E5 or Microsoft 365 E3/E5 licenses. No additional cost.</p>
+                                            <a href="https://learn.microsoft.com/en-us/windows/deployment/windows-autopatch/" target="_blank" class="learn-more-link">
+                                                <i class="fas fa-external-link-alt"></i> Learn about Autopatch
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="updates-wufb">
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-sliders-h"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>More control, more work</h5>
+                                            <p>WUfB gives you granular control but requires you to create and manage update policies in Intune.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-calendar-alt"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Configuration options</h5>
+                                            <ul>
+                                                <li>Feature update deferral (0-365 days)</li>
+                                                <li>Quality update deferral (0-30 days)</li>
+                                                <li>Deadline enforcement</li>
+                                                <li>Active hours configuration</li>
+                                                <li>Update rings for phased rollout</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="updates-wsus">
+                                    <div class="consideration-item warning">
+                                        <div class="consideration-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Not recommended for Cloud PCs</h5>
+                                            <p>WSUS requires Azure Network Connection and adds significant management overhead. Consider migrating to Autopatch or WUfB.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: App Deployment -->
+                <div class="wizard-step" id="step6">
+                    <h3><i class="fas fa-box-open"></i> Application Deployment</h3>
+                    <p>How will applications be deployed to your Cloud PCs?</p>
+                    
+                    <div class="step-layout">
+                        <div class="step-left">
+                            <div class="options-grid">
+                                <div class="option-card" data-value="intune">
+                                    <div class="option-header">
+                                        <h4>Microsoft Intune</h4>
+                                        <span class="badge badge-recommended">Recommended</span>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Cloud-native deployment</li>
+                                        <li><i class="fas fa-check"></i> Win32 apps, MSI, MSIX</li>
+                                        <li><i class="fas fa-check"></i> Microsoft Store apps</li>
+                                        <li><i class="fas fa-check"></i> Microsoft 365 Apps</li>
+                                        <li><i class="fas fa-check"></i> Required & available modes</li>
+                                        <li><i class="fas fa-check"></i> App protection policies</li>
+                                    </ul>
+                                    <p class="option-note">Best for: Modern app management</p>
+                                </div>
+                                
+                                <div class="option-card" data-value="intune-image">
+                                    <div class="option-header">
+                                        <h4>Intune + Custom Image</h4>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Large apps pre-installed</li>
+                                        <li><i class="fas fa-check"></i> Faster user onboarding</li>
+                                        <li><i class="fas fa-check"></i> Intune for updates</li>
+                                        <li><i class="fas fa-times"></i> Image maintenance</li>
+                                        <li><i class="fas fa-times"></i> Enterprise only</li>
+                                    </ul>
+                                    <p class="option-note">Best for: Large LOB apps (CAD, etc.)</p>
+                                </div>
+                                
+                                <div class="option-card" data-value="sccm">
+                                    <div class="option-header">
+                                        <h4>SCCM / Legacy</h4>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Existing infrastructure</li>
+                                        <li><i class="fas fa-check"></i> Complex deployments</li>
+                                        <li><i class="fas fa-times"></i> Requires ANC</li>
+                                        <li><i class="fas fa-times"></i> On-prem infrastructure</li>
+                                        <li><i class="fas fa-times"></i> Higher complexity</li>
+                                    </ul>
+                                    <p class="option-note">Best for: Existing SCCM customers (co-management)</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-right">
+                            <div class="considerations-panel expanded" id="apps-considerations-panel">
+                                <div class="considerations-header">
+                                    <h4><i class="fas fa-lightbulb"></i> Key Considerations</h4>
+                                </div>
+                                
+                                <div class="considerations-content active" id="apps-default">
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-hand-pointer"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Select an app deployment strategy</h5>
+                                            <p>Choose how applications will be delivered to your Cloud PCs.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="apps-intune">
+                                    <div class="consideration-item highlight recommended">
+                                        <div class="consideration-icon"><i class="fas fa-star"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Recommended Approach</h5>
+                                            <p>Intune provides <strong>cloud-native app deployment</strong> that works seamlessly with Windows 365 regardless of network configuration.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item highlight">
+                                        <div class="consideration-icon"><i class="fas fa-boxes"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Supported app types</h5>
+                                            <ul>
+                                                <li><strong>Win32 apps</strong> - .exe, .msi with detection rules</li>
+                                                <li><strong>Microsoft Store</strong> - New Store experience</li>
+                                                <li><strong>Microsoft 365 Apps</strong> - Built-in deployment</li>
+                                                <li><strong>LOB apps</strong> - .msi, .appx, .msix</li>
+                                                <li><strong>Web apps</strong> - PWA/shortcuts</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-user-check"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Company Portal</h5>
+                                            <p>Users can self-service install available apps from Company Portal - reducing IT tickets and improving productivity.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="apps-intune-image">
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-layer-group"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Hybrid approach</h5>
+                                            <p>Pre-install large applications (AutoCAD, Visual Studio, etc.) in the image, then use Intune for updates and smaller apps.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item warning">
+                                        <div class="consideration-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Image maintenance required</h5>
+                                            <p>You'll need to update and re-upload the image periodically to include app updates. Consider if Intune-only would simplify operations.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="apps-sccm">
+                                    <div class="consideration-item warning">
+                                        <div class="consideration-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Additional complexity</h5>
+                                            <p>SCCM requires Azure Network Connection for Cloud PCs to reach distribution points. Consider co-management as a path to Intune.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-exchange-alt"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Co-management path</h5>
+                                            <p>Use co-management to gradually shift workloads from SCCM to Intune. Start with compliance policies, then apps, then updates.</p>
+                                            <a href="https://learn.microsoft.com/en-us/mem/configmgr/comanage/" target="_blank" class="learn-more-link">
+                                                <i class="fas fa-external-link-alt"></i> Learn about co-management
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 7: User Data -->
+                <div class="wizard-step" id="step7">
+                    <h3><i class="fas fa-database"></i> User Data & Storage</h3>
+                    <p>Where will users store their data?</p>
+                    
+                    <div class="step-layout">
+                        <div class="step-left">
+                            <div class="options-grid">
+                                <div class="option-card" data-value="onedrive">
+                                    <div class="option-header">
+                                        <h4>OneDrive for Business</h4>
+                                        <span class="badge badge-recommended">Recommended</span>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Known Folder Move</li>
+                                        <li><i class="fas fa-check"></i> Cross-device sync</li>
+                                        <li><i class="fas fa-check"></i> Files On-Demand</li>
+                                        <li><i class="fas fa-check"></i> Version history</li>
+                                        <li><i class="fas fa-check"></i> Ransomware recovery</li>
+                                        <li><i class="fas fa-check"></i> No VPN needed</li>
+                                    </ul>
+                                    <p class="option-note">Best for: Cloud-first data strategy</p>
+                                </div>
+                                
+                                <div class="option-card" data-value="hybrid-storage">
+                                    <div class="option-header">
+                                        <h4>Hybrid (OneDrive + File Shares)</h4>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> OneDrive for user data</li>
+                                        <li><i class="fas fa-check"></i> File shares for team data</li>
+                                        <li><i class="fas fa-check"></i> Gradual migration path</li>
+                                        <li><i class="fas fa-times"></i> May need ANC or GSA</li>
+                                        <li><i class="fas fa-times"></i> Mixed experience</li>
+                                    </ul>
+                                    <p class="option-note">Best for: Transitioning to cloud</p>
+                                </div>
+                                
+                                <div class="option-card" data-value="fileshares">
+                                    <div class="option-header">
+                                        <h4>Traditional File Shares</h4>
+                                    </div>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Existing infrastructure</li>
+                                        <li><i class="fas fa-check"></i> Familiar UX</li>
+                                        <li><i class="fas fa-times"></i> Requires network path</li>
+                                        <li><i class="fas fa-times"></i> No offline access</li>
+                                        <li><i class="fas fa-times"></i> Backup complexity</li>
+                                        <li><i class="fas fa-times"></i> Data not portable</li>
+                                    </ul>
+                                    <p class="option-note">Best for: Regulatory requirements</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-right">
+                            <div class="considerations-panel expanded" id="data-considerations-panel">
+                                <div class="considerations-header">
+                                    <h4><i class="fas fa-lightbulb"></i> Key Considerations</h4>
+                                </div>
+                                
+                                <div class="considerations-content active" id="data-default">
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-hand-pointer"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Select a data storage strategy</h5>
+                                            <p>Choose where users will store their documents and files.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="data-onedrive">
+                                    <div class="consideration-item highlight recommended">
+                                        <div class="consideration-icon"><i class="fas fa-star"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Recommended Approach</h5>
+                                            <p>OneDrive with Known Folder Move provides the <strong>best user experience</strong> for Cloud PCs - data follows the user everywhere.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item highlight">
+                                        <div class="consideration-icon"><i class="fas fa-folder-open"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Known Folder Move (KFM)</h5>
+                                            <p>Automatically redirect Desktop, Documents, and Pictures to OneDrive:</p>
+                                            <ul>
+                                                <li>Seamless user experience - no change in behavior</li>
+                                                <li>Data available on any device</li>
+                                                <li>Automatic backup and sync</li>
+                                                <li>Configure via Intune policy</li>
+                                            </ul>
+                                            <a href="https://learn.microsoft.com/en-us/sharepoint/redirect-known-folders" target="_blank" class="learn-more-link">
+                                                <i class="fas fa-external-link-alt"></i> Configure KFM
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-cloud"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Files On-Demand</h5>
+                                            <p>Files appear in File Explorer but download on access - saving Cloud PC disk space while providing full access to user's OneDrive.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-shield-virus"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Built-in protection</h5>
+                                            <p>OneDrive includes version history (30 days), ransomware detection, and file recovery. Data is protected even if Cloud PC is compromised.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="data-hybrid-storage">
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-exchange-alt"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Transition strategy</h5>
+                                            <p>Start with OneDrive for user profiles, gradually migrate team shares to SharePoint or keep accessible via Entra Private Access.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-globe-americas"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>File share access options</h5>
+                                            <ul>
+                                                <li><strong>Entra Private Access</strong> - ZTNA access to on-prem shares (recommended)</li>
+                                                <li><strong>Azure Network Connection</strong> - Direct VNet connectivity</li>
+                                                <li><strong>Entra ID Kerberos</strong> - SSO to file servers</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="data-fileshares">
+                                    <div class="consideration-item warning">
+                                        <div class="consideration-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Additional complexity</h5>
+                                            <p>Traditional file shares require network connectivity from Cloud PCs. Consider migrating to OneDrive/SharePoint for better experience.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-road"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Migration tools</h5>
+                                            <p>Use <strong>SharePoint Migration Tool</strong> or <strong>Migration Manager</strong> to move file shares to SharePoint/OneDrive.</p>
+                                            <a href="https://learn.microsoft.com/en-us/sharepointmigration/introducing-the-sharepoint-migration-tool" target="_blank" class="learn-more-link">
+                                                <i class="fas fa-external-link-alt"></i> SharePoint Migration Tool
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 8: Security -->
+                <div class="wizard-step" id="step8">
                     <h3><i class="fas fa-shield-alt"></i> Security Configuration</h3>
                     <p>Select your security requirements</p>
                     
@@ -696,8 +1292,8 @@ graph LR
                     </div>
                 </div>
 
-                <!-- Step 6: Summary -->
-                <div class="wizard-step" id="step6">
+                <!-- Step 9: Summary -->
+                <div class="wizard-step" id="step9">
                     <h3><i class="fas fa-clipboard-check"></i> Deployment Summary</h3>
                     <p>Review your configuration and get your deployment checklist</p>
                     

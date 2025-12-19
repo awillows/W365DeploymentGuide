@@ -3,12 +3,15 @@
 // State Management
 const state = {
     currentStep: 1,
-    totalSteps: 6,
+    totalSteps: 9,
     selections: {
         license: null,
         identity: null,
         network: null,
         image: null,
+        updates: null,
+        apps: null,
+        data: null,
         security: {
             mfa: true,
             sso: false,
@@ -120,6 +123,21 @@ function initializeOptionCards() {
                     break;
                 case 'step4':
                     state.selections.image = value;
+                    break;
+                case 'step5':
+                    state.selections.updates = value;
+                    // Update considerations panel
+                    updateConsiderations('updates', value);
+                    break;
+                case 'step6':
+                    state.selections.apps = value;
+                    // Update considerations panel
+                    updateConsiderations('apps', value);
+                    break;
+                case 'step7':
+                    state.selections.data = value;
+                    // Update considerations panel
+                    updateConsiderations('data', value);
                     break;
             }
         });
@@ -253,6 +271,24 @@ function validateStep(step) {
         case 4:
             if (!state.selections.image) {
                 showValidationMessage('Please select an image type');
+                return false;
+            }
+            break;
+        case 5:
+            if (!state.selections.updates) {
+                showValidationMessage('Please select an update management strategy');
+                return false;
+            }
+            break;
+        case 6:
+            if (!state.selections.apps) {
+                showValidationMessage('Please select an app deployment strategy');
+                return false;
+            }
+            break;
+        case 7:
+            if (!state.selections.data) {
+                showValidationMessage('Please select a user data strategy');
                 return false;
             }
             break;
@@ -475,6 +511,24 @@ function generateConfigSummary() {
         'custom': 'Custom Image'
     };
     
+    const updateNames = {
+        'autopatch': 'Windows Autopatch',
+        'wufb': 'Windows Update for Business',
+        'wsus': 'WSUS / Legacy'
+    };
+    
+    const appNames = {
+        'intune': 'Microsoft Intune',
+        'intune-image': 'Intune + Custom Image',
+        'sccm': 'SCCM / Co-management'
+    };
+    
+    const dataNames = {
+        'onedrive': 'OneDrive for Business',
+        'hybrid-storage': 'Hybrid (OneDrive + File Shares)',
+        'fileshares': 'Traditional File Shares'
+    };
+    
     // Count security features
     const securityCount = Object.values(state.selections.security).filter(v => v).length;
     
@@ -494,6 +548,18 @@ function generateConfigSummary() {
         <div class="summary-item">
             <label>Image</label>
             <div class="value">${imageNames[state.selections.image] || 'Not selected'}</div>
+        </div>
+        <div class="summary-item">
+            <label>Updates</label>
+            <div class="value">${updateNames[state.selections.updates] || 'Not selected'}</div>
+        </div>
+        <div class="summary-item">
+            <label>App Deployment</label>
+            <div class="value">${appNames[state.selections.apps] || 'Not selected'}</div>
+        </div>
+        <div class="summary-item">
+            <label>User Data</label>
+            <div class="value">${dataNames[state.selections.data] || 'Not selected'}</div>
         </div>
         <div class="summary-item">
             <label>Security Features</label>
@@ -609,6 +675,39 @@ function generateChecklist() {
         note: 'Local admin, restore points, etc.',
         type: 'optional'
     });
+    
+    // Update management
+    if (state.selections.updates === 'autopatch') {
+        items.push({
+            title: 'Enable Windows Autopatch',
+            note: 'Configure in Intune and register devices',
+            type: 'recommended'
+        });
+    } else if (state.selections.updates === 'wufb') {
+        items.push({
+            title: 'Create Windows Update rings',
+            note: 'Configure update policies in Intune',
+            type: 'required'
+        });
+    }
+    
+    // App deployment
+    if (state.selections.apps === 'intune') {
+        items.push({
+            title: 'Package applications in Intune',
+            note: 'Win32 apps, Microsoft 365 Apps, LOB apps',
+            type: 'required'
+        });
+    }
+    
+    // User data
+    if (state.selections.data === 'onedrive') {
+        items.push({
+            title: 'Configure Known Folder Move',
+            note: 'Redirect Desktop, Documents, Pictures to OneDrive',
+            type: 'recommended'
+        });
+    }
     
     items.push({
         title: 'Deploy Windows App to endpoints',
@@ -1357,6 +1456,24 @@ function exportFullPackage() {
         'custom': 'Custom Image'
     };
     
+    const updateNames = {
+        'autopatch': 'Windows Autopatch',
+        'wufb': 'Windows Update for Business',
+        'wsus': 'WSUS / Legacy'
+    };
+    
+    const appNames = {
+        'intune': 'Microsoft Intune',
+        'intune-image': 'Intune + Custom Image',
+        'sccm': 'SCCM / Co-management'
+    };
+    
+    const dataNames = {
+        'onedrive': 'OneDrive for Business',
+        'hybrid-storage': 'Hybrid (OneDrive + File Shares)',
+        'fileshares': 'Traditional File Shares'
+    };
+    
     // Build comprehensive markdown document
     let content = `# Windows 365 Deployment Package
 Generated: ${new Date().toLocaleString()}
@@ -1371,6 +1488,9 @@ Generated: ${new Date().toLocaleString()}
 | Identity | ${identityNames[state.selections.identity]} |
 | Network | ${networkNames[state.selections.network]} |
 | Image | ${imageNames[state.selections.image]} |
+| Updates | ${updateNames[state.selections.updates]} |
+| App Deployment | ${appNames[state.selections.apps]} |
+| User Data | ${dataNames[state.selections.data]} |
 | Single Sign-On | ${state.selections.security.sso ? 'Enabled' : 'Disabled'} |
 
 ---

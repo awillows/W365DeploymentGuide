@@ -220,6 +220,132 @@ body {
     font-size: 0.95rem;
 }
 
+/* Comparison Overview Section */
+.comparison-overview {
+    margin-top: 30px;
+}
+
+.comparison-table-container {
+    overflow-x: auto;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.modern-comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    min-width: 900px;
+}
+
+.modern-comparison-table th,
+.modern-comparison-table td {
+    padding: 15px 12px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.modern-comparison-table th {
+    background: #0078d4;
+    color: white;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.modern-comparison-table th.approach-header {
+    width: 140px;
+    background: #005a9e;
+}
+
+.approach-label {
+    background: #f8f9fa;
+}
+
+.approach-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.approach-tag.traditional {
+    background: #6c757d;
+    color: white;
+}
+
+.approach-tag.modern {
+    background: linear-gradient(135deg, #0078d4, #00a4ef);
+    color: white;
+}
+
+.comparison-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+}
+
+.comparison-cell i:first-child {
+    font-size: 1.5rem;
+    color: #6c757d;
+}
+
+.comparison-cell span {
+    font-size: 0.8rem;
+    color: var(--text-dark);
+}
+
+.traditional-row .comparison-cell i:first-child {
+    color: #6c757d;
+}
+
+.modern-row .comparison-cell {
+    background: linear-gradient(to bottom, rgba(0, 120, 212, 0.05), transparent);
+}
+
+.modern-row .comparison-cell i:first-child {
+    color: #0078d4;
+}
+
+.modern-row .comparison-cell.recommended {
+    background: linear-gradient(to bottom, rgba(16, 124, 16, 0.1), rgba(16, 124, 16, 0.02));
+}
+
+.recommend-star {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.65rem !important;
+    color: #ffb900 !important;
+}
+
+.comparison-cta {
+    text-align: center;
+    margin-top: 25px;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(0, 120, 212, 0.1), rgba(0, 164, 239, 0.05));
+    border-radius: var(--radius);
+}
+
+.comparison-cta p {
+    color: var(--primary-color);
+    font-weight: 500;
+    margin: 0;
+}
+
+.comparison-cta i {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(5px); }
+    60% { transform: translateY(3px); }
+}
+
 /* Wizard */
 .wizard-progress {
     margin-bottom: 40px;
