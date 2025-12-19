@@ -818,9 +818,222 @@ body {
     display: flex;
     gap: 15px;
     justify-content: center;
+    flex-wrap: wrap;
     margin-top: 30px;
     padding-top: 30px;
     border-top: 1px solid var(--border-color);
+}
+
+/* Code Tabs and Blocks */
+.code-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 0;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.code-tab {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.code-tab:hover {
+    color: var(--primary-color);
+}
+
+.code-tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.code-container {
+    position: relative;
+}
+
+.code-block {
+    position: relative;
+    background: #1e1e1e;
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow: hidden;
+}
+
+.code-block.hidden {
+    display: none;
+}
+
+.code-block pre {
+    margin: 0;
+    padding: 20px;
+    overflow-x: auto;
+    max-height: 400px;
+}
+
+.code-block code {
+    font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.85rem;
+    color: #d4d4d4;
+    line-height: 1.5;
+    white-space: pre;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition);
+    z-index: 10;
+}
+
+.copy-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.copy-btn.copied {
+    background: var(--success-color);
+    border-color: var(--success-color);
+}
+
+/* Section Note */
+.section-note {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+}
+
+/* URLs Container */
+.urls-container {
+    display: grid;
+    gap: 15px;
+}
+
+.url-category {
+    background: var(--light-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+
+.url-category h5 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.url-category h5 i {
+    color: var(--primary-color);
+}
+
+.url-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.url-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--white);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+}
+
+.url-item i {
+    color: var(--success-color);
+    font-size: 0.75rem;
+}
+
+.url-item .port {
+    margin-left: auto;
+    background: var(--primary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+}
+
+/* Licensing Grid */
+.licensing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.license-item {
+    background: var(--light-bg);
+    border-radius: var(--radius);
+    padding: 15px;
+    text-align: center;
+}
+
+.license-item.required {
+    border-left: 4px solid var(--danger-color);
+}
+
+.license-item.optional {
+    border-left: 4px solid var(--secondary-color);
+}
+
+.license-item i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.license-item h5 {
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+.license-item p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.license-item .license-badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.license-item.required .license-badge {
+    background: #fce4e1;
+    color: var(--danger-color);
+}
+
+.license-item.optional .license-badge {
+    background: #e8e8e8;
+    color: var(--secondary-color);
 }
 
 /* Wizard Navigation */
