@@ -539,7 +539,7 @@ function generateExecutiveSummary() {
 
 // Generate Summary Architecture Diagram
 function generateSummaryDiagram() {
-    const container = document.getElementById('summaryMermaidDiagram');
+    const container = document.getElementById('summaryDiagram');
     
     const identity = state.selections.identity;
     const network = state.selections.network;
@@ -598,11 +598,42 @@ function generateSummaryDiagram() {
     style INTUNE fill:#00a4ef,color:#fff
     ${updates === 'autopatch' ? 'style AP fill:#107c10,color:#fff' : ''}`;
     
-    container.innerHTML = diagram;
+    // Clear and re-render with Mermaid
+    container.innerHTML = '';
+    container.removeAttribute('data-processed');
+    
+    const diagramDiv = document.createElement('div');
+    diagramDiv.className = 'mermaid';
+    diagramDiv.textContent = diagram;
+    container.appendChild(diagramDiv);
     
     // Re-render mermaid
     if (typeof mermaid !== 'undefined') {
-        mermaid.contentLoaded();
+        try {
+            mermaid.init(undefined, diagramDiv);
+        } catch (e) {
+            console.log('Mermaid diagram error:', e);
+            // Fallback: show a simple text representation
+            container.innerHTML = `
+                <div class="diagram-fallback">
+                    <div class="diagram-flow">
+                        <span class="diagram-node">👤 Users</span>
+                        <span class="diagram-arrow">→</span>
+                        <span class="diagram-node">Windows App</span>
+                        <span class="diagram-arrow">→</span>
+                        <span class="diagram-node highlight">☁️ Cloud PC</span>
+                        <span class="diagram-arrow">→</span>
+                        <span class="diagram-node">${identity === 'entra' ? 'Entra ID' : 'Hybrid AD'}</span>
+                    </div>
+                    <div class="diagram-management">
+                        <span class="diagram-label">Managed by:</span>
+                        <span class="diagram-node small">Intune</span>
+                        <span class="diagram-node small">${updates === 'autopatch' ? 'Autopatch' : updates === 'wufb' ? 'WUfB' : 'WSUS'}</span>
+                        ${data === 'onedrive' || data === 'hybrid-storage' ? '<span class="diagram-node small">OneDrive</span>' : ''}
+                    </div>
+                </div>
+            `;
+        }
     }
 }
 

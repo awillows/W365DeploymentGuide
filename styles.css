@@ -896,10 +896,73 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow-x: auto;
 }
 
 .architecture-diagram .mermaid {
     width: 100%;
+    min-width: 600px;
+}
+
+.architecture-diagram .mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Diagram Fallback */
+.diagram-fallback {
+    text-align: center;
+    padding: 30px;
+}
+
+.diagram-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.diagram-node {
+    background: var(--light-bg);
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    border: 2px solid var(--border-color);
+}
+
+.diagram-node.highlight {
+    background: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+.diagram-node.small {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    background: var(--secondary-color);
+    color: var(--white);
+    border-color: var(--secondary-color);
+}
+
+.diagram-arrow {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.diagram-management {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.diagram-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
 /* Summary Grid */
