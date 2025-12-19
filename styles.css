@@ -173,6 +173,167 @@ body {
     margin-bottom: 40px;
 }
 
+/* Introduction Content */
+.intro-content {
+    max-width: 900px;
+    margin: 0 auto 50px;
+}
+
+.intro-text {
+    text-align: left;
+}
+
+.intro-lead {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    margin-bottom: 25px;
+}
+
+.intro-highlight {
+    display: flex;
+    gap: 20px;
+    background: linear-gradient(135deg, #fff8e6 0%, #fff3cd 100%);
+    border-left: 4px solid var(--warning-color);
+    padding: 20px 25px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 20px;
+}
+
+.intro-highlight > i {
+    font-size: 1.5rem;
+    color: var(--warning-color);
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+
+.intro-highlight strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+    font-size: 1.05rem;
+}
+
+.intro-highlight p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Benefits Grid */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.benefit-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 25px 30px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    border-top: 4px solid var(--primary-color);
+}
+
+.benefit-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+.benefit-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary-color), #005a9e);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.benefit-icon i {
+    font-size: 1.25rem;
+    color: var(--white);
+}
+
+.benefit-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.benefit-card > p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.benefit-compare {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.8rem;
+}
+
+.compare-traditional {
+    color: #a0a0a0;
+}
+
+.compare-traditional i {
+    color: #d83b01;
+    margin-right: 6px;
+}
+
+.compare-modern {
+    color: var(--success-color);
+    font-weight: 500;
+}
+
+.compare-modern i {
+    margin-right: 6px;
+}
+
+/* Philosophy Callout */
+.philosophy-callout {
+    background: linear-gradient(135deg, #e6f3ff 0%, #cce5ff 100%);
+    border-radius: var(--radius);
+    padding: 35px 40px;
+    border-left: 5px solid var(--primary-color);
+}
+
+.philosophy-content h3 {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.philosophy-content h3 i {
+    font-size: 1.3rem;
+}
+
+.philosophy-content p {
+    color: var(--text-dark);
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.philosophy-content p:last-child {
+    margin-bottom: 0;
+}
+
+.philosophy-content strong {
+    color: var(--primary-color);
+}
+
 /* Overview Grid */
 .overview-grid {
     display: grid;

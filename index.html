@@ -39,32 +39,93 @@
         </div>
     </section>
 
-    <!-- Overview Section -->
+    <!-- Overview Section - Enhanced Introduction -->
     <section id="overview" class="section">
         <div class="container">
-            <h2>Deployment Overview</h2>
-            <p class="section-subtitle">Key decisions for your Windows 365 deployment</p>
+            <h2>Why Modernise Your Windows Desktop Strategy?</h2>
+            <p class="section-subtitle">The shift from traditional infrastructure to cloud-native endpoints</p>
             
-            <div class="overview-grid">
-                <div class="overview-card">
-                    <div class="card-icon"><i class="fas fa-id-card"></i></div>
-                    <h3>Identity</h3>
-                    <p>Choose between Microsoft Entra ID join or Hybrid Entra ID join based on your existing infrastructure</p>
+            <div class="intro-content">
+                <div class="intro-text">
+                    <p class="intro-lead">Windows 365 represents a fundamental shift in how organisations deliver Windows desktops. Rather than replicating traditional on-premises complexity in the cloud, the greatest benefits come from embracing cloud-native approaches that reduce infrastructure overhead while improving security and user experience.</p>
+                    
+                    <div class="intro-highlight">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>The opportunity</strong>
+                            <p>Many organisations approaching Windows 365 attempt to mirror their existing VDI or on-premises infrastructure. While Windows 365 supports this approach, doing so means inheriting the same complexity, maintenance burden, and security challenges that cloud adoption should eliminate.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="overview-card">
-                    <div class="card-icon"><i class="fas fa-network-wired"></i></div>
-                    <h3>Networking</h3>
-                    <p>Microsoft Hosted Network for simplicity or Azure Network Connection for on-premises access</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Accelerated Deployment</h3>
+                    <p>With Microsoft Hosted Network and gallery images, Cloud PCs can be provisioned in minutes rather than weeks. No Azure networking expertise required, no custom images to maintain, no domain controllers to configure.</p>
+                    <div class="benefit-compare">
+                        <span class="compare-traditional"><i class="fas fa-times"></i> Traditional: 2-4 weeks setup</span>
+                        <span class="compare-modern"><i class="fas fa-check"></i> Modern: Same day deployment</span>
+                    </div>
                 </div>
-                <div class="overview-card">
-                    <div class="card-icon"><i class="fas fa-desktop"></i></div>
-                    <h3>Images</h3>
-                    <p>Gallery images for quick deployment or custom images for standardized configurations</p>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-pound-sign"></i></div>
+                    <h3>Predictable Costs</h3>
+                    <p>Cloud PCs use a simple per-user, per-month pricing model. No variable compute costs, no storage management, no capacity planning. Finance teams can forecast with confidence.</p>
+                    <div class="benefit-compare">
+                        <span class="compare-traditional"><i class="fas fa-times"></i> Traditional: Variable infrastructure costs</span>
+                        <span class="compare-modern"><i class="fas fa-check"></i> Modern: Fixed monthly per-user cost</span>
+                    </div>
                 </div>
-                <div class="overview-card">
-                    <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
-                    <h3>Security</h3>
-                    <p>Conditional Access, MFA, and endpoint security policies for your Cloud PCs</p>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Zero Trust Security</h3>
+                    <p>Entra ID Join with Conditional Access enables passwordless authentication, device compliance checks, and identity-based security—without exposing domain controllers or maintaining complex network perimeters.</p>
+                    <div class="benefit-compare">
+                        <span class="compare-traditional"><i class="fas fa-times"></i> Traditional: Network perimeter security</span>
+                        <span class="compare-modern"><i class="fas fa-check"></i> Modern: Identity-based Zero Trust</span>
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-sync-alt"></i></div>
+                    <h3>Evergreen Updates</h3>
+                    <p>Windows Autopatch automates the entire update lifecycle—testing, deployment, and rollback. Microsoft manages the complexity of keeping Windows, Microsoft 365 Apps, Edge, and Teams current.</p>
+                    <div class="benefit-compare">
+                        <span class="compare-traditional"><i class="fas fa-times"></i> Traditional: Manual patching cycles</span>
+                        <span class="compare-modern"><i class="fas fa-check"></i> Modern: Fully automated updates</span>
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-users-cog"></i></div>
+                    <h3>Reduced IT Burden</h3>
+                    <p>Cloud-native management through Intune eliminates the need for SCCM infrastructure, Group Policy complexity, and on-premises management servers. One console for all endpoints.</p>
+                    <div class="benefit-compare">
+                        <span class="compare-traditional"><i class="fas fa-times"></i> Traditional: Multiple management tools</span>
+                        <span class="compare-modern"><i class="fas fa-check"></i> Modern: Single Intune console</span>
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-cloud"></i></div>
+                    <h3>Data Protection</h3>
+                    <p>OneDrive with Known Folder Move ensures user data is automatically backed up, versioned, and accessible from any device. No file server infrastructure to maintain or back up.</p>
+                    <div class="benefit-compare">
+                        <span class="compare-traditional"><i class="fas fa-times"></i> Traditional: File server backups</span>
+                        <span class="compare-modern"><i class="fas fa-check"></i> Modern: Automatic cloud sync</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="philosophy-callout">
+                <div class="philosophy-content">
+                    <h3><i class="fas fa-compass"></i> Our Recommendation</h3>
+                    <p>This guide is intentionally opinionated. While we'll help you configure Windows 365 to meet your specific requirements—including hybrid scenarios where truly necessary—we strongly advocate for the <strong>simplified, cloud-native approach</strong> wherever possible.</p>
+                    <p>The "traditional" options exist for organisations with genuine constraints: regulatory requirements mandating domain membership, legacy applications requiring Kerberos authentication, or phased migration strategies. But for most organisations, the modern approach delivers better security, lower costs, and improved user experience.</p>
                 </div>
             </div>
         </div>
