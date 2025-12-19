@@ -1279,70 +1279,98 @@ graph LR
 
                 <!-- Step 8: Summary -->
                 <div class="wizard-step" id="step8">
-                    <h3><i class="fas fa-clipboard-check"></i> Deployment Summary</h3>
-                    <p>Review your configuration and get your deployment checklist</p>
+                    <h3><i class="fas fa-clipboard-check"></i> Your Deployment Plan</h3>
+                    <p>Review your configuration and export your deployment guide</p>
                     
                     <div class="summary-container">
+                        <!-- Executive Summary -->
+                        <div class="summary-section executive-summary">
+                            <h4><i class="fas fa-file-alt"></i> Executive Summary</h4>
+                            <div class="exec-summary-content" id="execSummary">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Architecture Diagram -->
                         <div class="summary-section">
-                            <h4>Your Configuration</h4>
+                            <h4><i class="fas fa-project-diagram"></i> Your Architecture</h4>
+                            <p class="section-note">Visual representation of your deployment choices</p>
+                            <div class="architecture-diagram" id="summaryDiagram">
+                                <div class="mermaid" id="summaryMermaidDiagram">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Configuration Grid -->
+                        <div class="summary-section">
+                            <h4><i class="fas fa-cog"></i> Configuration Details</h4>
                             <div class="summary-grid" id="summaryGrid">
                                 <!-- Populated by JavaScript -->
                             </div>
                         </div>
 
+                        <!-- Next Steps -->
                         <div class="summary-section">
-                            <h4>Pre-Deployment Checklist</h4>
-                            <div class="checklist" id="deploymentChecklist">
+                            <h4><i class="fas fa-tasks"></i> Key Next Steps</h4>
+                            <div class="next-steps-list" id="nextSteps">
                                 <!-- Populated by JavaScript -->
                             </div>
                         </div>
 
+                        <!-- Quick Links -->
                         <div class="summary-section">
-                            <h4>Estimated Timeline</h4>
-                            <div class="timeline" id="timeline">
-                                <!-- Populated by JavaScript -->
+                            <h4><i class="fas fa-external-link-alt"></i> Quick Links</h4>
+                            <div class="quick-links-grid">
+                                <a href="https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365ProvisionPolicy" target="_blank" class="quick-link">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Create Provisioning Policy</span>
+                                </a>
+                                <a href="https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365UserSettings" target="_blank" class="quick-link">
+                                    <i class="fas fa-user-cog"></i>
+                                    <span>User Settings</span>
+                                </a>
+                                <a href="https://entra.microsoft.com/#view/Microsoft_AAD_IAM/GroupsManagementMenuBlade/~/AllGroups" target="_blank" class="quick-link">
+                                    <i class="fas fa-users"></i>
+                                    <span>Create User Group</span>
+                                </a>
+                                <a href="https://windows365.microsoft.com" target="_blank" class="quick-link">
+                                    <i class="fas fa-desktop"></i>
+                                    <span>Windows 365 Portal</span>
+                                </a>
                             </div>
                         </div>
 
-                        <div class="summary-section">
-                            <h4><i class="fas fa-code"></i> Provisioning Policy Code</h4>
-                            <p class="section-note">Ready-to-use code to create your provisioning policy</p>
-                            <div class="code-tabs">
-                                <button class="code-tab active" onclick="switchCodeTab('powershell')">
-                                    <i class="fas fa-terminal"></i> PowerShell
-                                </button>
-                                <button class="code-tab" onclick="switchCodeTab('graph')">
-                                    <i class="fas fa-code"></i> Graph API JSON
-                                </button>
+                        <!-- Provisioning Policy Code (Collapsible) -->
+                        <div class="summary-section collapsible">
+                            <div class="section-header" onclick="toggleSection('codeSection')">
+                                <h4><i class="fas fa-code"></i> Provisioning Policy Code</h4>
+                                <i class="fas fa-chevron-down collapse-icon" id="codeSectionIcon"></i>
                             </div>
-                            <div class="code-container">
-                                <div class="code-block" id="powershellCode">
-                                    <button class="copy-btn" onclick="copyCode('powershell')">
-                                        <i class="fas fa-copy"></i> Copy
+                            <div class="section-content collapsed" id="codeSection">
+                                <p class="section-note">Ready-to-use code to create your provisioning policy</p>
+                                <div class="code-tabs">
+                                    <button class="code-tab active" onclick="switchCodeTab('powershell')">
+                                        <i class="fas fa-terminal"></i> PowerShell
                                     </button>
-                                    <pre><code id="powershellContent"><!-- Populated by JavaScript --></code></pre>
-                                </div>
-                                <div class="code-block hidden" id="graphCode">
-                                    <button class="copy-btn" onclick="copyCode('graph')">
-                                        <i class="fas fa-copy"></i> Copy
+                                    <button class="code-tab" onclick="switchCodeTab('graph')">
+                                        <i class="fas fa-code"></i> Graph API JSON
                                     </button>
-                                    <pre><code id="graphContent"><!-- Populated by JavaScript --></code></pre>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="summary-section">
-                            <h4><i class="fas fa-globe"></i> Required URLs & Endpoints</h4>
-                            <p class="section-note">Ensure these URLs are accessible from your network</p>
-                            <div class="urls-container" id="requiredUrls">
-                                <!-- Populated by JavaScript -->
-                            </div>
-                        </div>
-
-                        <div class="summary-section">
-                            <h4><i class="fas fa-id-card"></i> Licensing Requirements</h4>
-                            <div class="licensing-grid" id="licensingRequirements">
-                                <!-- Populated by JavaScript -->
+                                <div class="code-container">
+                                    <div class="code-block" id="powershellCode">
+                                        <button class="copy-btn" onclick="copyCode('powershell')">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <pre><code id="powershellContent"><!-- Populated by JavaScript --></code></pre>
+                                    </div>
+                                    <div class="code-block hidden" id="graphCode">
+                                        <button class="copy-btn" onclick="copyCode('graph')">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                        <pre><code id="graphContent"><!-- Populated by JavaScript --></code></pre>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1350,12 +1378,6 @@ graph LR
                     <div class="export-buttons">
                         <button class="btn btn-primary" onclick="exportFullPackage()">
                             <i class="fas fa-file-archive"></i> Export Full Package
-                        </button>
-                        <button class="btn btn-secondary" onclick="exportSummary()">
-                            <i class="fas fa-download"></i> Export Checklist
-                        </button>
-                        <button class="btn btn-secondary" onclick="exportPowerShell()">
-                            <i class="fas fa-terminal"></i> Export PowerShell
                         </button>
                         <button class="btn btn-secondary" onclick="printSummary()">
                             <i class="fas fa-print"></i> Print Summary

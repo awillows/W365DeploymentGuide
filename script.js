@@ -436,12 +436,174 @@ function updateNavigationButtons() {
 
 // Generate summary
 function generateSummary() {
+    generateExecutiveSummary();
+    generateSummaryDiagram();
     generateConfigSummary();
-    generateChecklist();
-    generateTimeline();
+    generateNextSteps();
     generateProvisioningPolicyCode();
-    generateRequiredUrls();
-    generateLicensingRequirements();
+}
+
+// Generate Executive Summary
+function generateExecutiveSummary() {
+    const container = document.getElementById('execSummary');
+    
+    const licenseNames = {
+        'enterprise': 'Windows 365 Enterprise',
+        'business': 'Windows 365 Business',
+        'frontline': 'Windows 365 Frontline'
+    };
+    
+    const identityDesc = {
+        'entra': 'cloud-native Microsoft Entra ID Join',
+        'hybrid': 'Hybrid Entra ID Join with on-premises AD integration'
+    };
+    
+    const networkDesc = {
+        'microsoft-hosted': 'Microsoft Hosted Network (no Azure infrastructure required)',
+        'anc': 'Azure Network Connection (custom networking with your Azure VNet)'
+    };
+    
+    const imageDesc = {
+        'gallery': 'Microsoft Gallery images (pre-configured, auto-updated)',
+        'custom': 'Custom images from your Azure Compute Gallery'
+    };
+    
+    const updateDesc = {
+        'autopatch': 'Windows Autopatch for fully automated update management',
+        'wufb': 'Windows Update for Business with custom ring deployment',
+        'wsus': 'WSUS/SCCM for traditional update management'
+    };
+    
+    // Determine complexity
+    let complexity = 'Simple';
+    let complexityIcon = 'fa-smile';
+    let complexityClass = 'recommended';
+    
+    if (state.selections.network === 'anc' || state.selections.identity === 'hybrid' || state.selections.image === 'custom') {
+        complexity = 'Moderate';
+        complexityIcon = 'fa-meh';
+        complexityClass = '';
+    }
+    if (state.selections.network === 'anc' && state.selections.identity === 'hybrid') {
+        complexity = 'Complex';
+        complexityIcon = 'fa-frown';
+        complexityClass = '';
+    }
+    
+    // Estimate timeline
+    let timeline = '3-5 days';
+    if (complexity === 'Moderate') timeline = '1-2 weeks';
+    if (complexity === 'Complex') timeline = '2-4 weeks';
+    
+    const isRecommended = state.selections.identity === 'entra' && 
+                          state.selections.network === 'microsoft-hosted' && 
+                          state.selections.image === 'gallery' &&
+                          state.selections.updates === 'autopatch';
+    
+    let html = `
+        <p>This deployment plan uses <strong>${licenseNames[state.selections.license]}</strong> with ${identityDesc[state.selections.identity]}. 
+        Cloud PCs will connect via ${networkDesc[state.selections.network]} and use ${imageDesc[state.selections.image]}.</p>
+    `;
+    
+    if (isRecommended) {
+        html += `
+            <div class="highlight-box recommended">
+                <i class="fas fa-check-circle"></i>
+                <div>
+                    <strong>Streamlined Configuration</strong><br>
+                    You've selected Microsoft's recommended approach for the fastest, simplest deployment with minimal infrastructure requirements.
+                </div>
+            </div>
+        `;
+    }
+    
+    html += `
+        <div class="highlight-box">
+            <i class="fas fa-clock"></i>
+            <div>
+                <strong>Estimated Timeline: ${timeline}</strong><br>
+                Deployment complexity: ${complexity}
+            </div>
+        </div>
+        
+        <div class="config-tags">
+            <span class="config-tag">${state.selections.identity === 'entra' ? 'Entra ID Join' : 'Hybrid Join'}</span>
+            <span class="config-tag">${state.selections.network === 'microsoft-hosted' ? 'Microsoft Hosted' : 'Azure Network'}</span>
+            <span class="config-tag secondary">${state.selections.image === 'gallery' ? 'Gallery Image' : 'Custom Image'}</span>
+            <span class="config-tag secondary">${updateDesc[state.selections.updates]?.split(' ')[0] || 'Updates'}</span>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+// Generate Summary Architecture Diagram
+function generateSummaryDiagram() {
+    const container = document.getElementById('summaryMermaidDiagram');
+    
+    const identity = state.selections.identity;
+    const network = state.selections.network;
+    const image = state.selections.image;
+    const updates = state.selections.updates;
+    const apps = state.selections.apps;
+    const data = state.selections.data;
+    
+    let diagram = `graph LR
+    subgraph "Users"
+        U[("👤 Users")]
+    end
+    
+    subgraph "Access"
+        WA["Windows App<br/>Web/Desktop"]
+    end
+    
+    subgraph "Windows 365"
+        CPC["☁️ Cloud PC"]
+    end
+    
+    subgraph "Identity"
+        ${identity === 'entra' ? 'ENTRA["Microsoft<br/>Entra ID"]' : 'ENTRA["Microsoft<br/>Entra ID"]\n        AD["On-Premises<br/>Active Directory"]'}
+    end
+    
+    subgraph "Management"
+        INTUNE["Microsoft<br/>Intune"]
+        ${updates === 'autopatch' ? 'AP["Windows<br/>Autopatch"]' : updates === 'wufb' ? 'WUFB["Windows Update<br/>for Business"]' : 'WSUS["WSUS/SCCM"]'}
+    end
+    
+    ${network === 'anc' ? `subgraph "Azure Network"
+        VNET["Azure VNet"]
+        ${identity === 'hybrid' ? 'VPN["VPN/ExpressRoute"]' : ''}
+    end` : ''}
+    
+    ${data === 'onedrive' ? `subgraph "Data"
+        OD["OneDrive for<br/>Business"]
+    end` : data === 'hybrid-storage' ? `subgraph "Data"
+        OD["OneDrive"]
+        FS["File Shares"]
+    end` : ''}
+    
+    U --> WA
+    WA --> CPC
+    CPC --> ENTRA
+    ${identity === 'hybrid' ? 'CPC --> AD' : ''}
+    ${network === 'anc' ? 'CPC --> VNET' : ''}
+    ${network === 'anc' && identity === 'hybrid' ? 'VNET --> VPN\n    VPN --> AD' : ''}
+    INTUNE --> CPC
+    ${updates === 'autopatch' ? 'AP --> CPC' : updates === 'wufb' ? 'WUFB --> CPC' : 'WSUS --> CPC'}
+    ${data === 'onedrive' || data === 'hybrid-storage' ? 'CPC --> OD' : ''}
+    ${data === 'hybrid-storage' ? 'CPC --> FS' : ''}
+    
+    style CPC fill:#0078d4,color:#fff
+    style ENTRA fill:#00a4ef,color:#fff
+    style INTUNE fill:#00a4ef,color:#fff
+    ${updates === 'autopatch' ? 'style AP fill:#107c10,color:#fff' : ''}`;
+    
+    container.innerHTML = diagram;
+    
+    // Re-render mermaid
+    if (typeof mermaid !== 'undefined') {
+        mermaid.contentLoaded();
+    }
 }
 
 // Generate configuration summary
@@ -519,249 +681,117 @@ function generateConfigSummary() {
     `;
 }
 
-// Generate deployment checklist
-function generateChecklist() {
-    const checklist = document.getElementById('deploymentChecklist');
-    const items = [];
+// Generate Next Steps
+function generateNextSteps() {
+    const container = document.getElementById('nextSteps');
+    const steps = [];
     
-    // Base requirements
-    items.push({
-        title: 'Verify Microsoft 365 / EMS licensing',
-        note: 'E3/E5 or Intune license required',
-        type: 'required'
+    // Step 1: Always create user group
+    steps.push({
+        title: 'Create Entra ID User Group',
+        description: 'Create a security group for your Cloud PC users',
+        link: 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/GroupsManagementMenuBlade/~/AllGroups'
     });
     
-    items.push({
-        title: 'Purchase Windows 365 licenses',
-        note: `${state.selections.license === 'enterprise' ? 'Enterprise' : state.selections.license === 'frontline' ? 'Frontline' : 'Business'} licenses for target users`,
-        type: 'required'
-    });
-    
-    // Identity requirements
-    if (state.selections.identity === 'hybrid') {
-        items.push({
-            title: 'Configure Azure AD Connect',
-            note: 'Enable password hash sync and device writeback',
-            type: 'required'
-        });
-        items.push({
-            title: 'Verify Domain Controller connectivity',
-            note: 'Cloud PCs must reach DCs for domain join',
-            type: 'required'
-        });
-    }
-    
-    // Network requirements
+    // Step 2: Network (if ANC)
     if (state.selections.network === 'anc') {
-        items.push({
-            title: 'Create Azure subscription',
-            note: 'Required for Azure Network Connection',
-            type: 'required'
-        });
-        items.push({
-            title: 'Create Virtual Network',
-            note: 'With /26 subnet minimum for Cloud PCs',
-            type: 'required'
-        });
-        items.push({
+        steps.push({
             title: 'Configure Azure Network Connection',
-            note: 'In Intune admin center',
-            type: 'required'
+            description: 'Set up VNet and create the Azure Network Connection',
+            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365AzureNetworkConnection'
         });
-        if (state.selections.identity === 'hybrid') {
-            items.push({
-                title: 'Set up VPN Gateway or ExpressRoute',
-                note: 'For connectivity to on-premises DC',
-                type: 'required'
-            });
-        }
     }
     
-    // Image requirements
+    // Step 3: Image (if custom)
     if (state.selections.image === 'custom') {
-        items.push({
-            title: 'Create Azure Compute Gallery',
-            note: 'To store custom images',
-            type: 'required'
-        });
-        items.push({
-            title: 'Build and generalize custom image',
-            note: 'Windows 10/11 Enterprise, Gen 2, Sysprep',
-            type: 'required'
+        steps.push({
+            title: 'Upload Custom Image',
+            description: 'Add your custom image to Device Images',
+            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365DeviceImage'
         });
     }
     
-    // Security requirements
-    if (state.selections.security.mfa) {
-        items.push({
-            title: 'Configure MFA for Cloud PC access',
-            note: 'Conditional Access policy',
-            type: 'recommended'
+    // Step 4: Create provisioning policy
+    steps.push({
+        title: 'Create Provisioning Policy',
+        description: 'Configure and create your Cloud PC provisioning policy',
+        link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365ProvisionPolicy'
+    });
+    
+    // Step 5: User settings
+    steps.push({
+        title: 'Configure User Settings',
+        description: 'Set local admin rights, restore points, and other user settings',
+        link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/w365UserSettings'
+    });
+    
+    // Step 6: App deployment (if Intune)
+    if (state.selections.apps === 'intune' || state.selections.apps === 'intune-image') {
+        steps.push({
+            title: 'Configure App Deployment',
+            description: 'Package and assign apps in Intune',
+            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/AppsMenu/~/windowsApps'
         });
     }
     
-    if (state.selections.security.defender) {
-        items.push({
-            title: 'Enable Defender for Endpoint onboarding',
-            note: 'Via Intune device configuration',
-            type: 'recommended'
-        });
-    }
-    
-    // Standard items
-    items.push({
-        title: 'Create provisioning policy',
-        note: 'Specify image, network, join type, and sizing',
-        type: 'required'
-    });
-    
-    items.push({
-        title: 'Create user assignment group',
-        note: 'Entra ID group for Cloud PC users',
-        type: 'required'
-    });
-    
-    items.push({
-        title: 'Configure user settings policy',
-        note: 'Local admin, restore points, etc.',
-        type: 'optional'
-    });
-    
-    // Update management
+    // Step 7: Update management
     if (state.selections.updates === 'autopatch') {
-        items.push({
+        steps.push({
             title: 'Enable Windows Autopatch',
-            note: 'Configure in Intune and register devices',
-            type: 'recommended'
+            description: 'Configure Autopatch for automated update management',
+            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/windowsAutopatch'
         });
     } else if (state.selections.updates === 'wufb') {
-        items.push({
-            title: 'Create Windows Update rings',
-            note: 'Configure update policies in Intune',
-            type: 'required'
+        steps.push({
+            title: 'Configure Update Rings',
+            description: 'Create Windows Update for Business policies',
+            link: 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesWindowsMenu/~/windowsUpdateRings'
         });
     }
     
-    // App deployment
-    if (state.selections.apps === 'intune') {
-        items.push({
-            title: 'Package applications in Intune',
-            note: 'Win32 apps, Microsoft 365 Apps, LOB apps',
-            type: 'required'
-        });
-    }
-    
-    // User data
-    if (state.selections.data === 'onedrive') {
-        items.push({
-            title: 'Configure Known Folder Move',
-            note: 'Redirect Desktop, Documents, Pictures to OneDrive',
-            type: 'recommended'
-        });
-    }
-    
-    items.push({
-        title: 'Deploy Windows App to endpoints',
-        note: 'Via Intune or manual installation',
-        type: 'recommended'
-    });
-    
-    items.push({
-        title: 'Create user documentation',
-        note: 'Access instructions and support contacts',
-        type: 'optional'
-    });
-    
-    // Render checklist
-    checklist.innerHTML = items.map(item => `
-        <div class="checklist-item ${item.type}">
-            <input type="checkbox">
-            <div class="item-content">
-                <div class="item-title">${item.title}</div>
-                <div class="item-note">${item.note}</div>
+    container.innerHTML = steps.map((step, index) => `
+        <div class="next-step-item">
+            <div class="step-number">${index + 1}</div>
+            <div class="step-content">
+                <div class="step-title">${step.title}</div>
+                <div class="step-description">${step.description}</div>
             </div>
-            <span class="badge ${item.type === 'required' ? '' : item.type === 'recommended' ? 'badge-recommended' : ''}">${item.type}</span>
+            <a href="${step.link}" target="_blank" class="step-link">
+                <i class="fas fa-external-link-alt"></i>
+            </a>
         </div>
     `).join('');
 }
 
-// Generate timeline
+// Toggle collapsible section
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const icon = document.getElementById(sectionId + 'Icon');
+    
+    if (section.classList.contains('collapsed')) {
+        section.classList.remove('collapsed');
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        section.classList.add('collapsed');
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+
+// Legacy function stubs for compatibility
+function generateChecklist() {
+    // Removed - functionality replaced by generateNextSteps
+}
+
 function generateTimeline() {
-    const timeline = document.getElementById('timeline');
-    const steps = [];
-    
-    // Day 1-2: Prerequisites
-    steps.push({
-        day: '1-2',
-        title: 'Prerequisites & Licensing',
-        description: 'Verify licensing, purchase W365 licenses, create user groups'
-    });
-    
-    // Network setup timing
-    if (state.selections.network === 'anc') {
-        steps.push({
-            day: '3-5',
-            title: 'Network Configuration',
-            description: 'Create VNet, configure ANC, set up VPN if needed'
-        });
-        
-        if (state.selections.identity === 'hybrid') {
-            steps.push({
-                day: '5-7',
-                title: 'Identity Configuration',
-                description: 'Configure AD Connect, verify DC connectivity'
-            });
-        }
-    }
-    
-    // Image setup
-    if (state.selections.image === 'custom') {
-        steps.push({
-            day: state.selections.network === 'anc' ? '7-10' : '3-6',
-            title: 'Custom Image Creation',
-            description: 'Build, configure, and upload custom image'
-        });
-    }
-    
-    // Provisioning
-    const provDay = state.selections.image === 'custom' ? 
-        (state.selections.network === 'anc' ? '10-11' : '6-7') :
-        (state.selections.network === 'anc' ? '7-8' : '3-4');
-    
-    steps.push({
-        day: provDay,
-        title: 'Provisioning Policy Setup',
-        description: 'Create policy, configure security, assign users'
-    });
-    
-    // Pilot
-    const pilotDay = state.selections.image === 'custom' ? 
-        (state.selections.network === 'anc' ? '11-14' : '7-10') :
-        (state.selections.network === 'anc' ? '8-10' : '4-6');
-    
-    steps.push({
-        day: pilotDay,
-        title: 'Pilot Deployment',
-        description: 'Deploy to pilot group, gather feedback, refine'
-    });
-    
-    // Full rollout
-    steps.push({
-        day: 'Ongoing',
-        title: 'Production Rollout',
-        description: 'Phased deployment to remaining users'
-    });
-    
-    // Render timeline
-    timeline.innerHTML = steps.map((step, index) => `
-        <div class="timeline-item">
-            <div class="timeline-marker">${index + 1}</div>
-            <div class="timeline-content">
-                <h5>Day ${step.day}: ${step.title}</h5>
-                <p>${step.description}</p>
-            </div>
-        </div>
-    `).join('');
+    // Removed - functionality replaced by executive summary
+}
+
+function generateRequiredUrls() {
+    // Removed - simplified summary page
+}
+
+function generateLicensingRequirements() {
+    // Removed - info included in executive summary
 }
 
 // Export summary as text/markdown
@@ -795,16 +825,11 @@ function exportSummary() {
     content += `- **Network:** ${networkNames[state.selections.network]}\n`;
     content += `- **Image:** ${imageNames[state.selections.image]}\n\n`;
     
-    content += `## Security Settings\n\n`;
-    Object.entries(state.selections.security).forEach(([key, value]) => {
-        content += `- [${value ? 'x' : ' '}] ${key.charAt(0).toUpperCase() + key.slice(1)}\n`;
-    });
-    
-    content += `\n## Deployment Checklist\n\n`;
-    document.querySelectorAll('#deploymentChecklist .checklist-item').forEach(item => {
-        const title = item.querySelector('.item-title').textContent;
-        const note = item.querySelector('.item-note').textContent;
-        content += `- [ ] **${title}** - ${note}\n`;
+    content += `\n## Next Steps\n\n`;
+    document.querySelectorAll('#nextSteps .next-step-item').forEach((item, index) => {
+        const title = item.querySelector('.step-title').textContent;
+        const desc = item.querySelector('.step-description').textContent;
+        content += `${index + 1}. **${title}** - ${desc}\n`;
     });
     
     // Create download
@@ -1000,7 +1025,6 @@ function generateProvisioningPolicyCode() {
     const network = state.selections.network;
     const image = state.selections.image;
     const license = state.selections.license;
-    const sso = state.selections.security.sso;
     
     // Determine domain join type
     const domainJoinType = identity === 'hybrid' ? 'hybridAzureADJoin' : 'azureADJoin';
@@ -1245,20 +1269,6 @@ function generateRequiredUrls() {
         `;
     }
     
-    // Defender
-    if (state.selections.security.defender) {
-        html += `
-            <div class="url-category">
-                <h5><i class="fas fa-shield-virus"></i> Microsoft Defender for Endpoint</h5>
-                <div class="url-list">
-                    <div class="url-item"><i class="fas fa-check"></i> *.securitycenter.windows.com <span class="port">443</span></div>
-                    <div class="url-item"><i class="fas fa-check"></i> *.security.microsoft.com <span class="port">443</span></div>
-                    <div class="url-item"><i class="fas fa-check"></i> winatp-gw-*.microsoft.com <span class="port">443</span></div>
-                </div>
-            </div>
-        `;
-    }
-    
     container.innerHTML = html;
 }
 
@@ -1305,25 +1315,6 @@ function generateLicensingRequirements() {
             description: 'Per-user license (includes Entra & Intune)',
             icon: 'fa-cloud',
             required: true
-        });
-    }
-    
-    // Optional licenses
-    if (state.selections.security.risk) {
-        licenses.push({
-            name: 'Entra ID P2',
-            description: 'For risk-based Conditional Access',
-            icon: 'fa-shield-alt',
-            required: false
-        });
-    }
-    
-    if (state.selections.security.defender) {
-        licenses.push({
-            name: 'Defender for Endpoint',
-            description: 'P1 or P2 for advanced protection',
-            icon: 'fa-shield-virus',
-            required: false
         });
     }
     
@@ -1442,7 +1433,6 @@ Generated: ${new Date().toLocaleString()}
 | Updates | ${updateNames[state.selections.updates]} |
 | App Deployment | ${appNames[state.selections.apps]} |
 | User Data | ${dataNames[state.selections.data]} |
-| Single Sign-On | ${state.selections.security.sso ? 'Enabled' : 'Disabled'} |
 
 ---
 

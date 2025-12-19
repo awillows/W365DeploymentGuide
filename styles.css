@@ -822,6 +822,87 @@ body {
     border-bottom: 2px solid var(--primary-color);
 }
 
+.summary-section h4 i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+/* Executive Summary */
+.executive-summary {
+    background: linear-gradient(135deg, var(--light-bg) 0%, #e8f4fd 100%);
+    padding: 25px;
+    border-radius: var(--radius);
+    border-left: 4px solid var(--primary-color);
+}
+
+.exec-summary-content {
+    line-height: 1.8;
+}
+
+.exec-summary-content p {
+    margin-bottom: 15px;
+}
+
+.exec-summary-content .highlight-box {
+    background: var(--white);
+    padding: 15px 20px;
+    border-radius: var(--radius);
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.exec-summary-content .highlight-box i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.exec-summary-content .highlight-box.recommended {
+    border-left: 3px solid var(--success-color);
+}
+
+.exec-summary-content .highlight-box.recommended i {
+    color: var(--success-color);
+}
+
+.exec-summary-content .config-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.exec-summary-content .config-tag {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.exec-summary-content .config-tag.secondary {
+    background: var(--secondary-color);
+}
+
+/* Architecture Diagram */
+.architecture-diagram {
+    background: var(--white);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.architecture-diagram .mermaid {
+    width: 100%;
+}
+
+/* Summary Grid */
 .summary-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -846,6 +927,131 @@ body {
     font-weight: 600;
     color: var(--primary-color);
     margin-top: 5px;
+}
+
+/* Next Steps */
+.next-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.next-step-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background: var(--light-bg);
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+}
+
+.next-step-item:hover {
+    background: #e8f4fd;
+    transform: translateX(5px);
+}
+
+.next-step-item .step-number {
+    width: 32px;
+    height: 32px;
+    background: var(--primary-color);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.next-step-item .step-content {
+    flex: 1;
+}
+
+.next-step-item .step-title {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.next-step-item .step-description {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.next-step-item .step-link {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+/* Quick Links */
+.quick-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.quick-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    background: var(--light-bg);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.quick-link:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 120, 212, 0.3);
+}
+
+.quick-link i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.quick-link:hover i {
+    color: var(--white);
+}
+
+.quick-link span {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Collapsible Sections */
+.summary-section.collapsible .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 0;
+}
+
+.summary-section.collapsible .section-header h4 {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.summary-section.collapsible .collapse-icon {
+    transition: transform 0.3s ease;
+    color: var(--text-muted);
+}
+
+.summary-section.collapsible .section-content.collapsed {
+    display: none;
+}
+
+.summary-section.collapsible .section-content.expanded .collapse-icon {
+    transform: rotate(180deg);
 }
 
 /* Checklist */
