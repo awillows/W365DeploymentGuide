@@ -873,189 +873,202 @@ function generateProvisioningPolicyCode() {}
 
 // Export deployment plan to PDF
 function exportToPDF() {
-    // Get the summary container content
-    const execSummaryHtml = document.getElementById('execSummary').innerHTML;
-    const diagramSvg = document.getElementById('summaryDiagram').innerHTML;
+    // Get the summary section to export
+    const summaryContainer = document.querySelector('.summary-container');
     
-    // Create a container for the PDF content
-    const pdfContent = document.createElement('div');
-    pdfContent.id = 'pdf-export-content';
-    pdfContent.innerHTML = `
-        <style>
-            #pdf-export-content {
-                font-family: 'Segoe UI', Arial, sans-serif;
-                color: #333;
-                padding: 30px;
-                background: white;
-                max-width: 800px;
-                margin: 0 auto;
-            }
-            #pdf-export-content .pdf-header {
-                text-align: center;
-                margin-bottom: 30px;
-                border-bottom: 3px solid #0078d4;
-                padding-bottom: 20px;
-            }
-            #pdf-export-content .pdf-header h1 {
-                color: #0078d4;
-                margin: 0;
-                font-size: 26px;
-                font-weight: 600;
-            }
-            #pdf-export-content .plan-section {
-                margin-bottom: 25px;
-                padding-bottom: 20px;
-                border-bottom: 1px solid #eee;
-            }
-            #pdf-export-content .plan-section h5 {
-                color: #0078d4;
-                font-size: 14px;
-                margin-bottom: 12px;
-                font-weight: 600;
-            }
-            #pdf-export-content .decision-box {
-                background: #f5f5f5;
-                padding: 15px;
-                border-radius: 6px;
-                border-left: 4px solid #0078d4;
-            }
-            #pdf-export-content .decision-choice {
-                font-weight: 600;
-                margin-bottom: 10px;
-                padding-bottom: 8px;
-                border-bottom: 1px solid #ddd;
-            }
-            #pdf-export-content .decision-rationale {
-                font-size: 12px;
-                line-height: 1.6;
-            }
-            #pdf-export-content .decision-rationale ul {
-                margin: 8px 0 8px 20px;
-                padding: 0;
-            }
-            #pdf-export-content .decision-rationale li {
-                margin-bottom: 4px;
-            }
-            #pdf-export-content .badge-recommended {
-                background: #107c10;
-                color: white;
-                font-size: 10px;
-                padding: 2px 8px;
-                border-radius: 10px;
-                margin-left: 10px;
-            }
-            #pdf-export-content .plan-metrics {
-                display: flex;
-                gap: 30px;
-                background: #f0f0f0;
-                padding: 15px;
-                border-radius: 6px;
-                margin-top: 15px;
-            }
-            #pdf-export-content .metric {
-                display: flex;
-                flex-direction: column;
-            }
-            #pdf-export-content .metric-label {
-                font-size: 10px;
-                color: #666;
-                text-transform: uppercase;
-            }
-            #pdf-export-content .metric-value {
-                font-size: 14px;
-                font-weight: 600;
-            }
-            #pdf-export-content .plan-meta {
-                text-align: right;
-                font-size: 11px;
-                color: #666;
-                margin-bottom: 15px;
-            }
-            #pdf-export-content .arch-section {
-                margin-top: 30px;
-                page-break-before: always;
-            }
-            #pdf-export-content .arch-section h2 {
-                color: #0078d4;
-                font-size: 18px;
-                margin-bottom: 15px;
-            }
-            #pdf-export-content .diagram-container {
-                background: #fafafa;
-                padding: 20px;
-                border-radius: 8px;
-                text-align: center;
-            }
-            #pdf-export-content .diagram-container svg {
-                max-width: 100%;
-                height: auto;
-            }
-            #pdf-export-content .pdf-footer {
-                margin-top: 40px;
-                padding-top: 15px;
-                border-top: 1px solid #ddd;
-                text-align: center;
-                font-size: 11px;
-                color: #888;
-            }
-        </style>
-        
-        <div class="pdf-header">
-            <h1>Windows 365 Deployment Plan</h1>
-        </div>
-        
-        <div class="exec-summary">
-            ${execSummaryHtml}
-        </div>
-        
-        <div class="arch-section">
-            <h2>Architecture Overview</h2>
-            <div class="diagram-container">
-                ${diagramSvg}
-            </div>
-        </div>
-        
-        <div class="pdf-footer">
-            Generated using the Windows 365 Deployment Guide
-        </div>
+    if (!summaryContainer) {
+        alert('Please complete the wizard first to generate a deployment plan.');
+        return;
+    }
+    
+    // Create a wrapper for PDF export
+    const wrapper = document.createElement('div');
+    wrapper.id = 'pdf-wrapper';
+    
+    // Add print-specific styles
+    const styles = document.createElement('style');
+    styles.textContent = `
+        #pdf-wrapper {
+            background: white;
+            padding: 20px 30px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #333;
+            width: 190mm;
+        }
+        #pdf-wrapper .pdf-title {
+            text-align: center;
+            border-bottom: 3px solid #0078d4;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        #pdf-wrapper .pdf-title h1 {
+            color: #0078d4;
+            font-size: 22px;
+            margin: 0;
+        }
+        #pdf-wrapper .summary-section {
+            margin-bottom: 20px;
+            border: none;
+            box-shadow: none;
+        }
+        #pdf-wrapper .summary-section h4 {
+            display: none;
+        }
+        #pdf-wrapper .plan-section {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            page-break-inside: avoid;
+        }
+        #pdf-wrapper .plan-section h5 {
+            color: #0078d4;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        #pdf-wrapper .decision-box {
+            background: #f8f8f8;
+            padding: 12px;
+            border-left: 3px solid #0078d4;
+            border-radius: 4px;
+        }
+        #pdf-wrapper .decision-choice {
+            font-weight: 600;
+            font-size: 12px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+        }
+        #pdf-wrapper .decision-rationale {
+            font-size: 11px;
+            line-height: 1.5;
+        }
+        #pdf-wrapper .decision-rationale p {
+            margin: 6px 0;
+        }
+        #pdf-wrapper .decision-rationale ul {
+            margin: 6px 0 6px 15px;
+            padding: 0;
+        }
+        #pdf-wrapper .decision-rationale li {
+            margin-bottom: 3px;
+        }
+        #pdf-wrapper .plan-metrics {
+            display: flex;
+            gap: 20px;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        #pdf-wrapper .metric-label {
+            font-size: 9px;
+            color: #666;
+        }
+        #pdf-wrapper .metric-value {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        #pdf-wrapper .badge-recommended {
+            background: #107c10;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+        #pdf-wrapper .architecture-diagram {
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            page-break-before: always;
+        }
+        #pdf-wrapper .architecture-diagram svg {
+            max-width: 100%;
+            height: auto;
+        }
+        #pdf-wrapper .arch-title {
+            color: #0078d4;
+            font-size: 16px;
+            margin: 20px 0 10px 0;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        #pdf-wrapper .pdf-footer {
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 10px;
+            color: #888;
+        }
     `;
+    wrapper.appendChild(styles);
     
-    // Add to document body (visible but will be removed after)
-    pdfContent.style.position = 'fixed';
-    pdfContent.style.top = '0';
-    pdfContent.style.left = '0';
-    pdfContent.style.width = '210mm';
-    pdfContent.style.background = 'white';
-    pdfContent.style.zIndex = '99999';
-    document.body.appendChild(pdfContent);
+    // Add title
+    const title = document.createElement('div');
+    title.className = 'pdf-title';
+    title.innerHTML = '<h1>Windows 365 Deployment Plan</h1>';
+    wrapper.appendChild(title);
     
-    // PDF options
+    // Clone and add the executive summary
+    const execSummary = document.getElementById('execSummary');
+    if (execSummary) {
+        const summaryClone = execSummary.cloneNode(true);
+        wrapper.appendChild(summaryClone);
+    }
+    
+    // Add architecture title
+    const archTitle = document.createElement('h2');
+    archTitle.className = 'arch-title';
+    archTitle.textContent = 'Architecture Overview';
+    wrapper.appendChild(archTitle);
+    
+    // Clone and add the diagram
+    const diagram = document.getElementById('summaryDiagram');
+    if (diagram) {
+        const diagramClone = diagram.cloneNode(true);
+        diagramClone.className = 'architecture-diagram';
+        wrapper.appendChild(diagramClone);
+    }
+    
+    // Add footer
+    const footer = document.createElement('div');
+    footer.className = 'pdf-footer';
+    footer.textContent = 'Generated using the Windows 365 Deployment Guide';
+    wrapper.appendChild(footer);
+    
+    // Append to body for rendering
+    document.body.appendChild(wrapper);
+    
+    // Use html2pdf
     const opt = {
-        margin: 10,
+        margin: [10, 10, 10, 10],
         filename: 'W365-Deployment-Plan.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
+        image: { type: 'jpeg', quality: 0.95 },
         html2canvas: { 
             scale: 2,
             useCORS: true,
-            logging: false,
-            windowWidth: 800
+            logging: true,
+            backgroundColor: '#ffffff'
         },
         jsPDF: { 
             unit: 'mm', 
             format: 'a4', 
             orientation: 'portrait' 
-        },
-        pagebreak: { mode: 'css', before: '.arch-section' }
+        }
     };
     
-    // Generate PDF
-    html2pdf().set(opt).from(pdfContent).save().then(() => {
-        document.body.removeChild(pdfContent);
-    }).catch(err => {
-        console.error('PDF generation failed:', err);
-        document.body.removeChild(pdfContent);
-        alert('Failed to generate PDF. Please try again.');
-    });
+    // Small delay to ensure rendering
+    setTimeout(() => {
+        html2pdf().from(wrapper).set(opt).save().then(() => {
+            document.body.removeChild(wrapper);
+        }).catch(err => {
+            console.error('PDF error:', err);
+            document.body.removeChild(wrapper);
+            // Fallback to print
+            window.print();
+        });
+    }, 500);
 }
 
 // Legacy export function (kept for compatibility)
