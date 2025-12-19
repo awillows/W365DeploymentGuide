@@ -3,7 +3,7 @@
 // State Management
 const state = {
     currentStep: 1,
-    totalSteps: 9,
+    totalSteps: 8,
     selections: {
         license: null,
         identity: null,
@@ -11,20 +11,7 @@ const state = {
         image: null,
         updates: null,
         apps: null,
-        data: null,
-        security: {
-            mfa: true,
-            sso: false,
-            compliant: true,
-            location: false,
-            risk: false,
-            defender: true,
-            bitlocker: true,
-            baselines: false,
-            clipboard: false,
-            drive: false,
-            watermark: false
-        }
+        data: null
     }
 };
 
@@ -32,7 +19,6 @@ const state = {
 document.addEventListener('DOMContentLoaded', () => {
     initializeWizard();
     initializeOptionCards();
-    initializeSecurityCheckboxes();
     initializeNavLinks();
     initializeMermaid();
 });
@@ -123,6 +109,8 @@ function initializeOptionCards() {
                     break;
                 case 'step4':
                     state.selections.image = value;
+                    // Update considerations panel
+                    updateConsiderations('image', value);
                     break;
                 case 'step5':
                     state.selections.updates = value;
@@ -160,36 +148,6 @@ function updateConsiderations(step, value) {
     if (target) {
         target.classList.add('active');
     }
-}
-
-// Initialize security checkboxes
-function initializeSecurityCheckboxes() {
-    const checkboxMapping = {
-        'sec-mfa': 'mfa',
-        'sec-sso': 'sso',
-        'sec-compliant': 'compliant',
-        'sec-location': 'location',
-        'sec-risk': 'risk',
-        'sec-defender': 'defender',
-        'sec-bitlocker': 'bitlocker',
-        'sec-baselines': 'baselines',
-        'sec-clipboard': 'clipboard',
-        'sec-drive': 'drive',
-        'sec-watermark': 'watermark'
-    };
-    
-    Object.entries(checkboxMapping).forEach(([id, key]) => {
-        const checkbox = document.getElementById(id);
-        if (checkbox) {
-            // Set initial state
-            checkbox.checked = state.selections.security[key];
-            
-            // Add listener
-            checkbox.addEventListener('change', () => {
-                state.selections.security[key] = checkbox.checked;
-            });
-        }
-    });
 }
 
 // Initialize navigation links for smooth scrolling
@@ -529,9 +487,6 @@ function generateConfigSummary() {
         'fileshares': 'Traditional File Shares'
     };
     
-    // Count security features
-    const securityCount = Object.values(state.selections.security).filter(v => v).length;
-    
     grid.innerHTML = `
         <div class="summary-item">
             <label>License</label>
@@ -560,10 +515,6 @@ function generateConfigSummary() {
         <div class="summary-item">
             <label>User Data</label>
             <div class="value">${dataNames[state.selections.data] || 'Not selected'}</div>
-        </div>
-        <div class="summary-item">
-            <label>Security Features</label>
-            <div class="value">${securityCount} enabled</div>
         </div>
     `;
 }

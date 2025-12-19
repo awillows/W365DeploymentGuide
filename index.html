@@ -223,8 +223,7 @@
                     <span class="step" data-step="5">Updates</span>
                     <span class="step" data-step="6">Apps</span>
                     <span class="step" data-step="7">Data</span>
-                    <span class="step" data-step="8">Security</span>
-                    <span class="step" data-step="9">Summary</span>
+                    <span class="step" data-step="8">Summary</span>
                 </div>
             </div>
 
@@ -665,7 +664,9 @@ graph LR
                     <h3><i class="fas fa-desktop"></i> Image Selection</h3>
                     <p>What image will your Cloud PCs use?</p>
                     
-                    <div class="options-grid">
+                    <div class="step-layout">
+                        <div class="step-left">
+                            <div class="options-grid">
                         <div class="option-card" data-value="gallery">
                             <div class="option-header">
                                 <h4>Gallery Image</h4>
@@ -712,9 +713,110 @@ graph LR
                         </div>
                     </div>
 
-                    <div class="tip-box">
-                        <h4><i class="fas fa-lightbulb"></i> Pro Tip</h4>
-                        <p>Start with a <strong>Gallery Image</strong> and use <strong>Intune</strong> to deploy applications. This gives you the best of both worlds: quick deployment and centralized app management. Only move to custom images if you have many large applications that significantly slow down provisioning.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-right">
+                            <div class="considerations-panel expanded" id="image-considerations-panel">
+                                <div class="considerations-header">
+                                    <h4><i class="fas fa-lightbulb"></i> Key Considerations</h4>
+                                </div>
+                                
+                                <div class="considerations-content active" id="image-default">
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-hand-pointer"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Select an image type</h5>
+                                            <p>Choose an image strategy to see relevant considerations and guidance.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="image-gallery">
+                                    <div class="consideration-item highlight recommended">
+                                        <div class="consideration-icon"><i class="fas fa-star"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Recommended Approach</h5>
+                                            <p>Gallery images are the <strong>fastest path to deployment</strong>. Microsoft maintains them with the latest updates and security patches.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item highlight">
+                                        <div class="consideration-icon"><i class="fas fa-box-open"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Apps? Use Intune!</h5>
+                                            <p>Don't bake apps into images - deploy them via <strong>Intune</strong> instead:</p>
+                                            <ul>
+                                                <li>Centralized app management</li>
+                                                <li>Easy updates without rebuilding images</li>
+                                                <li>User self-service via Company Portal</li>
+                                                <li>Works with any gallery image</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-clock"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Provisioning time</h5>
+                                            <p>Gallery images provision quickly (~30-45 min). Apps deployed via Intune install during or after provisioning.</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-sync"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Always current</h5>
+                                            <p>Microsoft updates gallery images monthly with latest Windows updates - no maintenance required on your part.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="considerations-content" id="image-custom">
+                                    <div class="consideration-item warning">
+                                        <div class="consideration-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Additional overhead</h5>
+                                            <p>Custom images require ongoing maintenance. <strong>Consider if Intune app deployment could meet your needs instead.</strong></p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-tools"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Maintenance requirements</h5>
+                                            <ul>
+                                                <li>Monthly image updates recommended</li>
+                                                <li>Sysprep and generalize for each update</li>
+                                                <li>Upload to Azure Compute Gallery</li>
+                                                <li>Test before production deployment</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-check-circle"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>When custom images make sense</h5>
+                                            <ul>
+                                                <li>Very large applications (10GB+ like AutoCAD, Visual Studio)</li>
+                                                <li>Complex app dependencies requiring specific install order</li>
+                                                <li>Strict compliance requiring validated base images</li>
+                                                <li>Specialized developer environments</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="consideration-item">
+                                        <div class="consideration-icon"><i class="fas fa-layer-group"></i></div>
+                                        <div class="consideration-text">
+                                            <h5>Hybrid approach</h5>
+                                            <p>Put large/complex apps in the image, use Intune for everything else. This balances provisioning speed with manageability.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1177,123 +1279,8 @@ graph LR
                     </div>
                 </div>
 
-                <!-- Step 8: Security -->
+                <!-- Step 8: Summary -->
                 <div class="wizard-step" id="step8">
-                    <h3><i class="fas fa-shield-alt"></i> Security Configuration</h3>
-                    <p>Select your security requirements</p>
-                    
-                    <div class="security-options">
-                        <div class="security-category">
-                            <h4>Authentication</h4>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-mfa" checked>
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Multi-Factor Authentication</strong>
-                                    <p>Require MFA for Cloud PC access</p>
-                                </div>
-                                <span class="badge badge-recommended">Recommended</span>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-sso">
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Single Sign-On</strong>
-                                    <p>Enable SSO to the Cloud PC desktop</p>
-                                </div>
-                            </label>
-                        </div>
-
-                        <div class="security-category">
-                            <h4>Conditional Access</h4>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-compliant" checked>
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Require Compliant Device</strong>
-                                    <p>Only allow connections from compliant devices</p>
-                                </div>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-location">
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Location-Based Access</strong>
-                                    <p>Restrict access to specific locations/IPs</p>
-                                </div>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-risk">
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Sign-in Risk Policy</strong>
-                                    <p>Block or require MFA for risky sign-ins</p>
-                                </div>
-                                <span class="badge">Requires P2</span>
-                            </label>
-                        </div>
-
-                        <div class="security-category">
-                            <h4>Endpoint Security</h4>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-defender" checked>
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Microsoft Defender for Endpoint</strong>
-                                    <p>Advanced threat protection for Cloud PCs</p>
-                                </div>
-                                <span class="badge badge-recommended">Recommended</span>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-bitlocker" checked>
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>BitLocker Encryption</strong>
-                                    <p>Encrypt Cloud PC disks (enabled by default)</p>
-                                </div>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-baselines">
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Security Baselines</strong>
-                                    <p>Apply Microsoft security baselines via Intune</p>
-                                </div>
-                            </label>
-                        </div>
-
-                        <div class="security-category">
-                            <h4>Data Protection</h4>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-clipboard">
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Disable Clipboard Redirection</strong>
-                                    <p>Prevent copy/paste between local and Cloud PC</p>
-                                </div>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-drive">
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Disable Drive Redirection</strong>
-                                    <p>Prevent access to local drives from Cloud PC</p>
-                                </div>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="sec-watermark">
-                                <span class="checkmark"></span>
-                                <div class="option-content">
-                                    <strong>Screen Capture Protection</strong>
-                                    <p>Watermarking and screenshot prevention</p>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 9: Summary -->
-                <div class="wizard-step" id="step9">
                     <h3><i class="fas fa-clipboard-check"></i> Deployment Summary</h3>
                     <p>Review your configuration and get your deployment checklist</p>
                     
