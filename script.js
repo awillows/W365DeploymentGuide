@@ -64,6 +64,54 @@ function toggleConsiderations(panelId) {
 function initializeWizard() {
     updateProgressBar();
     updateNavigationButtons();
+    initializeStepClickHandlers();
+}
+
+// Initialize click handlers for step indicators
+function initializeStepClickHandlers() {
+    document.querySelectorAll('.progress-steps .step').forEach((step) => {
+        step.addEventListener('click', () => {
+            const targetStep = parseInt(step.dataset.step);
+            goToStep(targetStep);
+        });
+    });
+}
+
+// Go directly to a specific step
+function goToStep(targetStep) {
+    if (targetStep < 1 || targetStep > state.totalSteps) return;
+    if (targetStep === state.currentStep) return;
+    
+    // Validate all steps before the target when moving forward
+    if (targetStep > state.currentStep) {
+        for (let i = state.currentStep; i < targetStep; i++) {
+            if (!validateStep(i)) {
+                return;
+            }
+        }
+    }
+    
+    // Hide current step
+    document.getElementById(`step${state.currentStep}`).classList.remove('active');
+    
+    // Update state
+    state.currentStep = targetStep;
+    
+    // Show new step
+    document.getElementById(`step${state.currentStep}`).classList.add('active');
+    
+    // Update UI
+    updateProgressBar();
+    updateNavigationButtons();
+    updateProgressSteps();
+    
+    // Generate summary if on last step
+    if (state.currentStep === state.totalSteps) {
+        generateSummary();
+    }
+    
+    // Scroll to wizard
+    document.getElementById('wizard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Handle option card selection

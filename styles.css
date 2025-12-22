@@ -536,6 +536,14 @@ body {
     font-size: 0.85rem;
     color: var(--text-muted);
     transition: var(--transition);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.progress-steps .step:hover {
+    background-color: rgba(0, 120, 212, 0.1);
+    color: var(--primary-color);
 }
 
 .progress-steps .step.active {
