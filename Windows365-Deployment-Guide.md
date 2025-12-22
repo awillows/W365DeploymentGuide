@@ -3,13 +3,15 @@
 
 ---
 
+> ⚠️ **DISCLAIMER:** This is an unofficial community guide and is NOT an official Microsoft document. The information provided is for educational purposes only. Always refer to [official Microsoft documentation](https://learn.microsoft.com/windows-365/) for the most current and authoritative guidance.
+
 ![Windows 365](https://img.shields.io/badge/Windows%20365-0078D4?style=for-the-badge&logo=windows&logoColor=white)
 ![Microsoft Intune](https://img.shields.io/badge/Microsoft%20Intune-0078D4?style=for-the-badge&logo=microsoft&logoColor=white)
 ![Azure](https://img.shields.io/badge/Microsoft%20Azure-0089D6?style=for-the-badge&logo=microsoft-azure&logoColor=white)
 
 **Version:** 1.0  
 **Last Updated:** December 2024  
-**Author:** Microsoft Customer Success
+**Author:** Community Guide
 
 ---
 
@@ -1088,6 +1090,12 @@ flowchart LR
 
 ---
 
-*This document is provided for informational purposes. Please consult with your Microsoft representative for the latest information and guidance specific to your organization's needs.*
+---
 
-**© 2024 Microsoft Corporation. All rights reserved.**
+## Disclaimer
+
+*This is an **unofficial community guide** and is not affiliated with, endorsed by, or representative of Microsoft Corporation. The information contained in this document is provided "as-is" for educational and informational purposes only.*
+
+*Product names, logos, and brands are property of their respective owners. Always refer to official Microsoft documentation and consult with qualified professionals before making deployment decisions.*
+
+*For official guidance, please visit: [Microsoft Learn - Windows 365](https://learn.microsoft.com/windows-365/)*
